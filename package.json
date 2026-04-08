@@ -1,0 +1,31 @@
+{
+	"name": "@render-labs/glacier",
+	"version": "0.0.0",
+	"author": "Brendan Lucas",
+	"description": "A reactive, light-weight, web framework.",
+	"keywords": [
+		"glacier"
+	],
+	"license": "ISC",
+	"type": "module",
+	"imports": {
+		"#~/*": "./dist/src/*.js",
+		"#tests/*": "./dist/tests/*.js"
+	},
+	"main": "dist/src/index.js",
+	"dependencies": {
+		"rynth": "file:../rynth",
+		"colorjs.io": "latest",
+		"iron-enum": "latest"
+	},
+	"devDependencies": {
+		"typescript": "latest",
+
+		"webpack-cli": "latest",
+		"html-webpack-plugin": "latest",
+		"html-inline-script-webpack-plugin": "latest"
+	},
+	"scripts": {
+		"build": "bash scripts/build.sh"
+	}
+}
