@@ -7,13 +7,14 @@ import { usePico, } from '#tests/hello/pico';
     window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 );*/
 const counter = Rynth.signal(0);
+let startTime = window.performance.now();
 const elapsed = Rynth.signal(0);
 const interval = setInterval(() => {
-    elapsed.value++;
-}, 1000); // TODO: Rewrite these APIs.
-export const app = createApp(_jsxs(_Fragment, { children: [_jsxs(Head, { children: [_jsx(Meta, { name: "title", children: "Hello World!" }), usePico()] }), _jsxs(Body, { children: [_jsx(Header, { children: "My App" }), "Counter is ", counter, ".", _jsx(Break, {}), _jsx(Button, { click: () => {
+    elapsed.value = window.performance.now() - startTime;
+}, 10); // TODO: Rewrite these APIs.
+export const app = createApp(_jsxs(_Fragment, { children: [_jsxs(Head, { children: [_jsx(Meta, { name: "title", children: "Hello World!" }), usePico()] }), _jsxs(Body, { children: [_jsx(Header, { children: "My App" }), "Counter is ", counter, ". Time: ", elapsed.map((value) => (value / 1000).toFixed(3)), "s.", _jsx(Break, {}), _jsx(Button, { "on:click": () => {
                         counter.value++;
-                    }, children: "Click here to increment the counter" }), _jsx(Break, {}), _jsx(Button, { click: () => {
+                    }, children: "Click here to increment the counter" }), _jsx(Break, {}), _jsx(Button, { "on:click": () => {
                         counter.value = 0;
-                        elapsed.value = 0;
-                    }, children: "Click here to reset the counter" }), _jsx(Break, {}), _jsxs(Show, { when: counter.map((value) => value >= 100), children: ["Good work! Time: ", elapsed, "s."] })] })] }));
+                        startTime = window.performance.now();
+                    }, children: "Click here to reset the counter" }), _jsx(Break, {}), _jsx(Show, { when: counter.map((value) => value >= 100), children: "Good work!" })] })] }));

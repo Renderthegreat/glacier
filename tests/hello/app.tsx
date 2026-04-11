@@ -20,11 +20,12 @@ export type Theme = 'light' | 'dark';
 );*/
 
 const counter = Rynth.signal(0);
+let startTime = window.performance.now();
 const elapsed = Rynth.signal(0);
 
 const interval = setInterval(() => {
-	elapsed.value++;
-}, 1000); // TODO: Rewrite these APIs.
+	elapsed.value = window.performance.now() - startTime;
+}, 10); // TODO: Rewrite these APIs.
 
 export const app: App = createApp(
 	<>
@@ -38,25 +39,26 @@ export const app: App = createApp(
 			</Header>
 
 			Counter is {counter}.
+			Time: {elapsed.map((value: number) => (value / 1000).toFixed(3))}s.
 			<Break/>
 
 			<Button
-				click={()=>{
+				on:click={()=>{
 					counter.value++;
 				}}
 			>Click here to increment the counter</Button>
 			<Break/>
 
 			<Button
-				click={()=>{
+				on:click={()=>{
 					counter.value = 0;
-					elapsed.value = 0;
+					startTime = window.performance.now();
 				}}
 			>Click here to reset the counter</Button>
 			<Break/>
 
 			<Show when={counter.map((value: number) => value >= 100)}>
-				Good work! Time: {elapsed}s.
+				Good work!
 			</Show>
 		</Body>
 	</>

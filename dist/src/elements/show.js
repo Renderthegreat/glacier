@@ -1,36 +1,31 @@
-import clone from 'clone-deep';
+import { Fragment as _Fragment, jsx as _jsx } from "rynth/jsx-runtime";
 import { Component, Signal, } from 'rynth';
 export class Show {
-    symbol = Symbol('');
+    symbol = Symbol('slot');
+    // TODO: To clone or not to clone, that is the question.
     of(config) {
-        const whenSignal = config.when;
-        const componentSignal = new Signal(null);
-        // Ensure we don't destroy the real `config` on unmount.
-        const getNewConfig = () => {
-            return clone(config);
-        };
+        const { when, } = config;
+        const child = _jsx(_Fragment, {});
+        child.config.children = config.children;
+        const childSignal = new Signal(null);
         const wrapper = new Component(this.symbol, {
             ...config,
-            children: [
-                componentSignal
-            ],
+            children: [childSignal],
         });
-        // Subscribe to `whenSignal` and update the inner component.
-        const unsubscribe = whenSignal.subscribe((value) => {
-            console.log(`Show: ${value}.`);
+        const unsubscribe = when.subscribe((value) => {
             if (value) {
-                componentSignal.value = new Component(this.symbol, getNewConfig());
+                childSignal.value = child;
             }
             else {
-                componentSignal.value?.lifecycle.emit('unmount');
-                componentSignal.value = null;
+                childSignal.value = null;
             }
             ;
         });
-        wrapper.lifecycle.addCleanupTask(unsubscribe);
-        // Initialize based on current value.
-        if (whenSignal.value) {
-            componentSignal.value = new Component(this.symbol, getNewConfig());
+        wrapper.lifecycle.on('unmount', () => {
+            unsubscribe();
+        });
+        if (when.value) {
+            childSignal.value = child;
         }
         ;
         return wrapper;

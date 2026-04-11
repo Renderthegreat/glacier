@@ -1,46 +1,39 @@
-import deepClone from '@lodash.clonedeep';
-
-import { Component, ComponentFactory, ComponentConfig, Signal, } from 'rynth';
+import { Component, ComponentFactory, ComponentConfig, Child, Signal, } from 'rynth';
 
 export type ShowAttributes = {
 	when: Signal<boolean>;
 };
 export class Show implements ComponentFactory<ShowAttributes> {
-	public readonly symbol: symbol = Symbol('');
+	public readonly symbol: symbol = Symbol('slot');
 
+	// TODO: To clone or not to clone, that is the question.
 	public of(config: ComponentConfig<ShowAttributes>): Component<ShowAttributes> {
-		const whenSignal: Signal<boolean> = config.when;
-		const componentSignal: Signal<Component | null> = new Signal<Component | null>(null);
+		const { when, } = config;
 
-		// Ensure we don't destroy the real `config` on unmount.
-		const getNewConfig: () => ComponentConfig<ShowAttributes> = () => {
-			return clone(config);
-		};
+		const child = <></>;
+		child.config.children = config.children;
 
-		const wrapper: Component<ShowAttributes> = new Component<ShowAttributes>(this.symbol, {
+		const childSignal = new Signal<Child>(null);
+
+		const wrapper = new Component(this.symbol, {
 			...config,
-			children: [
-				componentSignal
-			],
+			children: [childSignal],
 		});
 
-		// Subscribe to `whenSignal` and update the inner component.
-		const unsubscribe = whenSignal.subscribe((value: boolean) => {
-			console.log(`Show: ${value}.`);
-
+		const unsubscribe = when.subscribe((value) => {
 			if (value) {
-				componentSignal.value = new Component(this.symbol, getNewConfig());
+				childSignal.value = child;
 			} else {
-				componentSignal.value?.lifecycle.emit('unmount');
-				componentSignal.value = null;
+			 	childSignal.value = null;
 			};
 		});
 
-		wrapper.lifecycle.addCleanupTask(unsubscribe);
+		wrapper.lifecycle.on('unmount', () => {
+			unsubscribe();
+		});
 
-		// Initialize based on current value.
-		if (whenSignal.value) {
-			componentSignal.value = new Component(this.symbol, getNewConfig());
+		if (when.value) {
+			childSignal.value = child;
 		};
 
 		return wrapper;

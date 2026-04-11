@@ -39,4 +39,6 @@ export class Canvas implements ComponentFactory<CanvasAttributes> {
 	public _getRenderingContext(type: CanvasContextType): RenderingContext | null {
 		return this.canvas!.getContext(type);
 	};
+
+	
 };
