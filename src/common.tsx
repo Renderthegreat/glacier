@@ -1,8 +1,8 @@
-import { Value, } from 'rynth';
+import * as Rynth from 'rynth';
 
-import { On, } from '#~/on';
+import { On, } from '#~/APIs/trigger';
 
 export type CommonAttributes = {
 	id?: string,
-	style?: Value<string>,
+	style?: Rynth.Value<string>,
 } & On;

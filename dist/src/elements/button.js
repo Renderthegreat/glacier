@@ -1,5 +1,5 @@
 import { Component, } from 'rynth';
-import { setup, } from '#~/on';
+import { On, } from '#~/APIs/trigger';
 /**
  * {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button HTMLButtonElement}.
  */
@@ -10,7 +10,7 @@ export class Button {
         // Attach the click listener directly to the rendered button element to avoid nested bridge/event-target issues.
         component.lifecycle.on('mount', ({ node, }) => {
             const buttonElement = node;
-            setup(buttonElement, config);
+            On.setup(buttonElement, config);
         });
         return component;
     }

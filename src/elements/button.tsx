@@ -1,7 +1,7 @@
 import { Component, ComponentFactory, ComponentConfig, } from 'rynth';
 
 import { CommonAttributes, } from '#~/common';
-import { setup, } from '#~/on';
+import { On, } from '#~/APIs/trigger';
 
 export type ButtonAttributes = { } & CommonAttributes;
 /**
@@ -17,7 +17,7 @@ export class Button implements ComponentFactory<ButtonAttributes> {
 		component.lifecycle.on('mount', ({ node, }: { node: Node, }) => {
 			const buttonElement = node as HTMLButtonElement;
 
-			setup(buttonElement, config);
+			On.setup(buttonElement, config);
 		});
 
 		return component;
