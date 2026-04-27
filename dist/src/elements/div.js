@@ -1,12 +1,7 @@
-import { Component, } from 'rynth';
+import { primitive, } from '#~/index';
 /**
  * {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/div HTMLDivElement}.
  */
-export class Div {
-    symbol = Symbol('div');
-    of(config) {
-        return new Component(this.symbol, config);
-    }
-    ;
-}
-;
+export const Div = primitive((component) => {
+    return component;
+}, Symbol('div'));

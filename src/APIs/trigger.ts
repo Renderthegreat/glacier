@@ -4,8 +4,8 @@ import { Cursor, } from '#~/APIs/cursor';
 
 // TODO: Use `Trigger` types.
 type OnKeys = {
-	click: () => void,
-	load: () => void,
+	click: () => void;
+	load: () => void;
 	// TODO: ....
 };
 
@@ -20,7 +20,7 @@ export namespace On {
 
 	export function setup(element: HTMLElement, config: On): void {
 		(Object.keys(config) as Array<keyof On>).forEach((key) => {
-			if (config[key] !== undefined) {
+			if (config[key] !== undefined && key.match(/^on\:/)) {
 				// `toLowerCase` usage may be trivial.
 				element.addEventListener(key.replace('on:', '').toLowerCase() as keyof HTMLElementEventMap, Rynth.unwrap(config[key]));
 			};

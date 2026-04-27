@@ -53,7 +53,7 @@ export class Input {
                 newConfig.type = InputType.Color();
             },
         });
-        return new Component(this.symbol, newConfig);
+        return new Component(newConfig, this.symbol);
     }
     ;
 }

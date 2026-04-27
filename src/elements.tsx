@@ -6,6 +6,9 @@ export * from '#~/elements/body';
 export * from '#~/elements/header';
 
 export * from '#~/elements/div';
+export * from '#~/elements/span';
+
+export * from '#~/elements/text';
 
 export * from '#~/elements/canvas';
 
@@ -18,5 +21,15 @@ export * from '#~/elements/meta';
 export * from '#~/elements/button';
 export * from '#~/elements/input';
 
-// # Conditionals.
+// # State based.
 export * from '#~/elements/show';
+export * from '#~/elements/collection';
+
+// # Custom components
+if (globalThis['window'] !== undefined) {
+	window.customElements.define('glacier-text', class extends HTMLElement {
+		public constructor() {
+			super();
+		};
+	});
+};

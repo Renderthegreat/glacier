@@ -14,9 +14,9 @@ export default {
 		filename: '[name].bundle.js',
 	},
 	
-	mode: 'production',
+	mode: 'development',
 	optimization: {
-		minimize: false
+		minimize: true,
 	},
 	devtool: 'source-map',
 
@@ -27,13 +27,13 @@ export default {
 	},
 
 	plugins: [
-		/*new HTMLWebpackPlugin({
-			// title: 'Hello, Rynth!',
+		// // new HTMLWebpackPlugin({
+		// 	title: 'Hello, Rynth!',
 
-			// template: './tests/hello.html',
-			filename: 'hello.html',
-			chunks: ['hello'],
-		}),
-		new HTMLInlineScriptPlugin(),*/
+		// 	template: './tests/hello.html',
+		// 	filename: 'hello.html',
+		// 	chunks: ['hello'],
+		// }),
+		// new HTMLInlineScriptPlugin(),
 	],
 };

@@ -17,3 +17,6 @@ tsc;
 
 echo "Bundling...";
 npx webpack;
+
+echo "Generating HTML page";
+echo "<html><script>$(cat dist/hello.bundle.js)</script></html>" > dist/hello.bundle.html;

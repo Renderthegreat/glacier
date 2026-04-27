@@ -1,15 +1,12 @@
-import { Component, ComponentFactory, ComponentConfig, } from 'rynth';
+import { Component, } from 'rynth';
 
-import { CommonAttributes } from '#~/common';
+import { CommonAttributes, } from '#~/common';
+import { primitive, } from '#~/index';
 
 export type StyleAttributes = {} & CommonAttributes;
 /**
  * {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style HTMLStyleElement}.
  */
-export class Style implements ComponentFactory<StyleAttributes> {
-	public readonly symbol: symbol = Symbol('style');
-
-	public of(config: ComponentConfig<StyleAttributes>): Component<StyleAttributes> {
-		return new Component(this.symbol, config);
-	};
-};
+export const Style = primitive<StyleAttributes>((component) => {
+	return component;
+}, Symbol('style'));

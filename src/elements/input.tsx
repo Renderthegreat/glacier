@@ -93,6 +93,6 @@ export class Input implements ComponentFactory<InputAttributes> {
 			},
 		});
 
-		return new Component(this.symbol, newConfig);
+		return new Component(newConfig, this.symbol);
 	};
 };

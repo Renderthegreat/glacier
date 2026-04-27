@@ -1,6 +1,6 @@
 import { Component, ComponentFactory, ComponentConfig, } from 'rynth';
 
-import { CommonAttributes } from '#~/common';
+import { CommonAttributes, } from '#~/common';
 
 export type MetaAttributes = {
 	name: string,
@@ -14,9 +14,9 @@ export class Meta implements ComponentFactory<MetaAttributes> {
 	public of(config: ComponentConfig<MetaAttributes>): Component<any> {
 		if (config.name == 'title') {
 			// I hate how this works.
-			return new Component(Symbol('title'), {
+			return new Component({
 				children: config.children,
-			});
+			}, Symbol('title'));
 		};
 
 		const newConfig: ComponentConfig<MetaAttributes & {
@@ -28,6 +28,6 @@ export class Meta implements ComponentFactory<MetaAttributes> {
 			children: [],
 		};
 
-		return new Component(this.symbol, newConfig);
+		return new Component(newConfig, this.symbol);
 	};
 };

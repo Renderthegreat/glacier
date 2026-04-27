@@ -2,11 +2,11 @@ import { IronEnum, } from 'iron-enum';
 
 export class Time {
 	public static readonly Data = IronEnum<{
-		readonly MUNIX: bigint,
-		readonly UNIX: bigint,
+		readonly MUNIX: bigint;
+		readonly UNIX: bigint;
 		// readonly ISO: `${number}-${number}-${number} ${number}:${number}:${number}`,
 
-		readonly Date: Date,
+		readonly Date: Date;
 	}>();
 
 	public static readonly Unit = {

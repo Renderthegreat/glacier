@@ -1,0 +1,63 @@
+/*! #tests/hello/app */
+
+/*! #tests/hello/components/header */
+
+/*! #tests/hello/utilities/pico */
+
+/*! #~/APIs/trigger */
+
+/*! #~/app */
+
+/*! #~/component */
+
+/*! #~/computed */
+
+/*! #~/elements */
+
+/*! #~/elements/body */
+
+/*! #~/elements/break */
+
+/*! #~/elements/button */
+
+/*! #~/elements/canvas */
+
+/*! #~/elements/collection */
+
+/*! #~/elements/div */
+
+/*! #~/elements/head */
+
+/*! #~/elements/header */
+
+/*! #~/elements/input */
+
+/*! #~/elements/meta */
+
+/*! #~/elements/show */
+
+/*! #~/elements/text */
+
+/*! #~/hook */
+
+/*! #~/index */
+
+/*! #~/lifecycle */
+
+/*! #~/render */
+
+/*! #~/signal */
+
+/*! ./index.js */
+
+/*! eventemitter3 */
+
+/*! iron-enum */
+
+/*! rynth */
+
+/*! rynth/jsx-runtime */
+
+/*!***********************************!*\
+  !*** ./dist/tests/hello/index.js ***!
+  \***********************************/

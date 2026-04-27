@@ -1,13 +1,13 @@
 import { Component, Child, Signal, } from 'rynth';
 
-export type Registry = Map<symbol, Node>;
+export type Registry = WeakMap<symbol, Node>;
 
 /**
  * Resolves a single child ({@link Component}, {@link Signal}, or primitive) into a physical DOM Node.
  */
 function resolveChild({ child, registry, root, }: { child: Child, registry: Registry, root: Component, }): Node | null {
 	if (child instanceof Component) {
-		return render({ root: child, registry });
+		return render({ root: child, registry, });
 	};
 
 	if (child instanceof Signal) {
@@ -20,7 +20,7 @@ function resolveChild({ child, registry, root, }: { child: Child, registry: Regi
 
 		const mountForValue = (value: any): Node | null => {
 			if (value instanceof Component) {
-				return render({ root: value, registry });
+				return render({ root: value, registry, });
 			};
 
 			if (value === null) {
@@ -86,7 +86,10 @@ function resolveChild({ child, registry, root, }: { child: Child, registry: Regi
  * Renders a given component tree into a DOM node.
  */
 export function render({ root, registry, }: { root: Component, registry: Registry, }): Node {
-	const isFragment: boolean = root.type.description === '';
+	const isFragment: boolean = (root.key.description === undefined)
+		? (true)
+		: (root.key.description === '')
+	;
 
 	// # Handle Fragments.
 	if (isFragment) {
@@ -121,7 +124,7 @@ export function render({ root, registry, }: { root: Component, registry: Registr
 	};
 
 	// # Handle Standard Elements.
-	const node: Element = window.document.createElement(root.type.description as keyof HTMLElementTagNameMap);
+	const node: Element = window.document.createElement((root.key.description) as keyof HTMLElementTagNameMap);
 	registry.set(root.key, node);
 
 	// Apply attributes gracefully.

@@ -1,6 +1,6 @@
 import { Component, ComponentFactory, ComponentConfig, } from 'rynth';
 
-import { CommonAttributes } from '#~/common';
+import { CommonAttributes, } from '#~/common';
 
 export enum CanvasContextType {
 	ImageBitmap = 'imagebitmap',
@@ -22,7 +22,7 @@ export class Canvas implements ComponentFactory<CanvasAttributes> {
 	private canvas?: HTMLCanvasElement;
 
 	public of(config: ComponentConfig<CanvasAttributes>): Component<CanvasAttributes> {
-		const component = new Component(this.symbol, config);
+		const component = new Component(config, this.symbol);
 		
 		component.lifecycle.on('mount', ({ node, }: { node: Node, }) => {
 			this.canvas = node as HTMLCanvasElement;

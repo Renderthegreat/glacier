@@ -1,15 +1,12 @@
-import { Component, ComponentFactory, ComponentConfig, } from 'rynth';
+import { Component, } from 'rynth';
 
-import { CommonAttributes } from '#~/common';
+import { CommonAttributes, } from '#~/common';
+import { primitive, } from '#~/index';
 
 export type HeadAttributes = {} & CommonAttributes;
 /**
  * {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/head HTMLHeadElement}.
  */
-export class Head implements ComponentFactory<HeadAttributes> {
-	public readonly symbol: symbol = Symbol('head');
-
-	public of(config: ComponentConfig<HeadAttributes>): Component<HeadAttributes> {
-		return new Component(this.symbol, config);
-	};
-};
+export const Head = primitive<HeadAttributes>((component) => {
+	return component;
+}, Symbol('head'));

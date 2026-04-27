@@ -1,7 +1,7 @@
 import { Signal, } from 'rynth';
 
 import { IronEnum, } from 'iron-enum';
-import { Input } from '#~/elements';
+import { Input, } from '#~/elements';
 
 export abstract class Stream<Input> {
 	public static readonly Status = IronEnum<{

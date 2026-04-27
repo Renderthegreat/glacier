@@ -1,12 +1,7 @@
-import { Component, } from 'rynth';
+import { primitive, } from '#~/index';
 /**
  * {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/head HTMLHeadElement}.
  */
-export class Head {
-    symbol = Symbol('head');
-    of(config) {
-        return new Component(this.symbol, config);
-    }
-    ;
-}
-;
+export const Head = primitive((component) => {
+    return component;
+}, Symbol('head'));

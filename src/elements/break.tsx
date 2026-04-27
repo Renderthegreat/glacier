@@ -1,15 +1,12 @@
-import { Component, ComponentFactory, ComponentConfig, } from 'rynth';
+import { Component, } from 'rynth';
 
-import { CommonAttributes } from '#~/common';
+import { CommonAttributes, } from '#~/common';
+import { primitive, } from '#~/index';
 
 export type BreakAttributes = {} & CommonAttributes;
 /**
  * {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/bR HTMLBRElement}.
  */
-export class Break implements ComponentFactory<BreakAttributes> {
-	public readonly symbol = Symbol('br');
-
-	public of(config: ComponentConfig<BreakAttributes>) {
-		return new Component<BreakAttributes>(this.symbol, config);
-	};
-};
+export const Break = primitive<BreakAttributes>((component) => {
+	return component;
+}, Symbol('br'));

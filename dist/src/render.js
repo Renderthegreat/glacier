@@ -4,7 +4,7 @@ import { Component, Signal, } from 'rynth';
  */
 function resolveChild({ child, registry, root, }) {
     if (child instanceof Component) {
-        return render({ root: child, registry });
+        return render({ root: child, registry, });
     }
     ;
     if (child instanceof Signal) {
@@ -15,7 +15,7 @@ function resolveChild({ child, registry, root, }) {
         let lastValue = child.value;
         const mountForValue = (value) => {
             if (value instanceof Component) {
-                return render({ root: value, registry });
+                return render({ root: value, registry, });
             }
             ;
             if (value === null) {
@@ -80,7 +80,9 @@ function resolveChild({ child, registry, root, }) {
  * Renders a given component tree into a DOM node.
  */
 export function render({ root, registry, }) {
-    const isFragment = root.type.description === '';
+    const isFragment = (root.key.description === undefined)
+        ? (true)
+        : (root.key.description === '');
     // # Handle Fragments.
     if (isFragment) {
         if (root.config.children.length === 0) {
@@ -113,7 +115,7 @@ export function render({ root, registry, }) {
     }
     ;
     // # Handle Standard Elements.
-    const node = window.document.createElement(root.type.description);
+    const node = window.document.createElement((root.key.description));
     registry.set(root.key, node);
     // Apply attributes gracefully.
     for (const [key, value] of Object.entries(root.config)) {

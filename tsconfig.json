@@ -7,6 +7,9 @@
 		"module": "esnext",
 		"moduleResolution": "bundler",
 
+		// "allowImportingTsExtensions": true,
+		// "noEmit": false,
+
 		"rootDirs": [
 			"src",
 			"tests",
@@ -14,20 +17,23 @@
 		"rootDir": ".",
 		"paths": {
 			"#~/*": [
-				"./src/*.js",
+				"./src/*",
 			],
 			"#tests/*": [
-				"./tests/*.js",
+				"./tests/*",
 			],
 		},
 
 		"resolveJsonModule": true,
+
+		"rewriteRelativeImportExtensions": true,
 
 		"outDir": "dist",
 
 		"strict": true,
 		"strictNullChecks": true,
 		"skipLibCheck": true,
+		"noUncheckedIndexedAccess": true,
 
 		"preserveSymlinks": true,
 	},

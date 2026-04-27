@@ -17,7 +17,7 @@ export class Canvas {
     // TODO: Maybe we should store this inside the component?
     canvas;
     of(config) {
-        const component = new Component(this.symbol, config);
+        const component = new Component(config, this.symbol);
         component.lifecycle.on('mount', ({ node, }) => {
             this.canvas = node;
         });
