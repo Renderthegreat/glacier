@@ -1,9 +1,11 @@
 import * as Rynth from 'rynth';
 
 import { CommonAttributes, } from '#~/common';
-import { On, } from '#~/APIs/trigger';
 
-import { Constructor, Class, } from 'type-fest';
+import { On, } from '#~/APIs/trigger';
+import { Style, } from '#~/APIs/styles';
+
+import { Class, } from 'type-fest';
 
 function setupComponent(component: Rynth.Component<any>): void {
 	// Attach the click listener directly to the rendered button element to avoid nested bridge/event-target issues.
@@ -12,6 +14,7 @@ function setupComponent(component: Rynth.Component<any>): void {
 			const element = node as HTMLElement;
 	
 			On.setup(element, component.config);
+			Style.setup(element, component.config.style);
 
 			return;
 		};
@@ -40,7 +43,7 @@ export function componentFunction<C extends CommonAttributes, T = object>(
 	return factory as any;
 };
 
-export function primitive<C extends CommonAttributes>(func: (config: Rynth.Component<C>) => Rynth.Component, key: symbol) {
+export function primitive<C extends CommonAttributes>(func: (config: Rynth.Component<C>) => Rynth.Component, key: symbol): Class<Rynth.ComponentFactory<C>> {
 	return class implements Rynth.ComponentFactory<C> {
 		public readonly symbol: symbol = key;
 

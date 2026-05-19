@@ -10,6 +10,10 @@ type OnKeys = {
 };
 
 export type On = {
+	[Key in keyof OnKeys]?: Rynth.Value<OnKeys[Key]>;
+};
+
+export type ApplyOn = {
 	[Key in keyof OnKeys as `on:${Key}`]?: Rynth.Value<OnKeys[Key]>;
 };
 
@@ -18,10 +22,10 @@ export namespace On {
 		position: Rynth.Signal<Cursor.Position>,
 	};
 
-	export function setup(element: HTMLElement, config: On): void {
-		(Object.keys(config) as Array<keyof On>).forEach((key) => {
+	export function setup(element: HTMLElement, config: ApplyOn): void {
+		(Object.keys(config) as Array<keyof ApplyOn>).forEach((key) => {
 			if (config[key] !== undefined && key.match(/^on\:/)) {
-				// `toLowerCase` usage may be trivial.
+				// ! `toLowerCase` usage may be trivial.
 				element.addEventListener(key.replace('on:', '').toLowerCase() as keyof HTMLElementEventMap, Rynth.unwrap(config[key]));
 			};
 		});

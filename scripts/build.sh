@@ -19,4 +19,4 @@ echo "Bundling...";
 npx webpack;
 
 echo "Generating HTML page";
-echo "<html><script>$(cat dist/hello.bundle.js)</script></html>" > dist/hello.bundle.html;
+echo "<html><script>$(cat dist/backtopaper.bundle.js)</script></html>" > dist/backtopaper.bundle.html;

@@ -1,0 +1,17 @@
+/*
+ * Variable declations.
+ */
+:root {
+	--primary: #1C1C1C;
+};
+
+/*
+ * Cards.
+ */
+.card-container {
+	background: var(--primary);
+
+	& > .card {
+		filter: invert(1);
+	};
+};

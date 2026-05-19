@@ -1,5 +1,9 @@
 import { Component, Child, Signal, } from 'rynth';
 
+/**
+ * A very simple registry that maps keys to nodes.
+ * It is much smaller than a virtual *DOM*.
+ */
 export type Registry = WeakMap<symbol, Node>;
 
 /**
@@ -11,8 +15,7 @@ function resolveChild({ child, registry, root, }: { child: Child, registry: Regi
 	};
 
 	if (child instanceof Signal) {
-		// We always return a stable Node (either the initial rendered node
-		// or a placeholder) so that future updates can replace it in-place.
+		// We always return a stable Node (either the initial rendered node or a placeholder) so that future updates can replace it in-place.
 		const placeholder = window.document.createComment('signal');
 
 		let currentNode: Node | null = null;
@@ -91,7 +94,7 @@ export function render({ root, registry, }: { root: Component, registry: Registr
 		: (root.key.description === '')
 	;
 
-	// # Handle Fragments.
+	// Handle Fragments.
 	if (isFragment) {
 		if (root.config.children.length === 0) {
 			const empty = window.document.createTextNode('');
@@ -123,7 +126,7 @@ export function render({ root, registry, }: { root: Component, registry: Registr
 		return root.config.children.length === 1 && firstNode ? firstNode : fragment;
 	};
 
-	// # Handle Standard Elements.
+	// Handle Standard Elements.
 	const node: Element = window.document.createElement((root.key.description) as keyof HTMLElementTagNameMap);
 	registry.set(root.key, node);
 

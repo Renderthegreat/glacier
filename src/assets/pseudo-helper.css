@@ -1,0 +1,13 @@
+/*
+ * This file helps with pseudo elements and selectors.
+ * 
+ */
+
+/* BEGIN GENERATED */
+
+[--G-pseudo]::after {
+	content: attr('--G-::after-content');
+	background: attr('--G-pseudo-after$color')
+};
+
+/* END GENERATED */

@@ -1,11 +1,13 @@
 import * as Rynth from 'rynth';
 import { On, } from '#~/APIs/trigger';
+import { Style, } from '#~/APIs/styles';
 function setupComponent(component) {
     // Attach the click listener directly to the rendered button element to avoid nested bridge/event-target issues.
     component.lifecycle.on('mount', ({ node, }) => {
         if (node.nodeType == Node.ELEMENT_NODE) {
             const element = node;
             On.setup(element, component.config);
+            Style.setup(element, component.config.style);
             return;
         }
         ;

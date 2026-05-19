@@ -4,7 +4,7 @@ export var On;
     function setup(element, config) {
         Object.keys(config).forEach((key) => {
             if (config[key] !== undefined && key.match(/^on\:/)) {
-                // `toLowerCase` usage may be trivial.
+                // ! `toLowerCase` usage may be trivial.
                 element.addEventListener(key.replace('on:', '').toLowerCase(), Rynth.unwrap(config[key]));
             }
             ;

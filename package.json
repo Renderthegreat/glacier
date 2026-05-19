@@ -14,16 +14,15 @@
 	},
 	"main": "dist/src/index.js",
 	"dependencies": {
-		"rynth": "file:../rynth",
 		"colorjs.io": "latest",
-		"iron-enum": "latest"
+		"iron-enum": "latest",
+		"rynth": "file:../rynth"
 	},
 	"devDependencies": {
-		"typescript": "latest",
-
-		"webpack-cli": "latest",
+		"html-inline-script-webpack-plugin": "latest",
 		"html-webpack-plugin": "latest",
-		"html-inline-script-webpack-plugin": "latest"
+		"typescript": "latest",
+		"webpack-cli": "latest"
 	},
 	"scripts": {
 		"build": "bash scripts/build.sh"

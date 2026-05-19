@@ -1,19 +1,37 @@
 import { Component, ComponentConfig, hook, } from 'rynth';
 
-import { BodyAttributes, HeadAttributes, Head, Body, } from '#~/elements';
+import { BodyAttributes, HeadAttributes, Head, Body, } from '#~/components';
 import { Registry, render, } from '#~/render';
 
 export type AppContainerConfig = ComponentConfig<{}>;
 export type AppConfig = ComponentConfig<{
 	registry: Registry,
+
+	/**
+	 * The base URL of the app.
+	 * This isn't necessary most of the time, but it should be included anyways.
+	 */
 	host?: string,
 }>;
 
 export type AppErrorConfig = {
 	message: string,
+
+	/**
+	 * Whether the app can recover from this error.
+	 */
 	fatal: boolean,
 };
 
+export type AppCreationConfig = {
+	setup?: (app: App, registry: Registry) => void,
+};
+
+/**
+ * Represents an error thrown by the app.
+ * When `fatal` is `true`, the app will crash\*.
+ * If `fatal` is `false`, the error will be propagated until caught.
+ */
 export class AppError extends Error {
 	public readonly fatal: boolean;
 
@@ -25,10 +43,45 @@ export class AppError extends Error {
 	};
 };
 
-export class App extends Component<AppConfig> {	
+export class App extends Component<AppConfig> {
+	/**
+	 * Creates a new app instance.
+	 * 
+	 * @param root - Expects a fragment of [{@link Head}, {@link Body}].
+	 * @param config - An optional configuration object.
+	 * @returns {App}.
+	 */
+	public static create(root: Component, config: AppCreationConfig = {}): App {
+		const registry: Registry = new WeakMap();
+
+		const app = new App({ children: root.config.children, registry: registry, });
+
+		if (config.setup) {
+			config.setup(app, new WeakMap());
+		} else {
+			hook(app, (component: Component) => {
+				// console.log(`Re-rendering... ${component.config}`);
+
+				let oldNode: Node = registry.get(component.key)!;
+				let newNode: Node = render({ root: component, registry: registry, });
+
+				// TODO: Ensure every `oldNode` is a `ChildNode`.
+				(oldNode as ChildNode).replaceWith(newNode);
+			});
+		};
+
+		return app;
+	};
+
+	protected document: Document = new Document();
+
+	protected virtualStylesheet: CSSStyleSheet;
+
 	public constructor(
 		public readonly config: AppConfig,
 	) {
+		// TODO: Prevent these errors from propagating.
+
 		if (!(config.children[0] instanceof Component) || !(config.children[1] instanceof Component)) {
 			throw new AppError({ message: 'App must have a <head> and <body> element.', fatal: true, });
 		};
@@ -42,8 +95,15 @@ export class App extends Component<AppConfig> {
 
 		super(
 			config,
-			Symbol(''), // ? Should I make a custom HTML element for this?
+			Symbol(''), // ? Should I add a custom HTML element for this?
 		);
+
+		// Generate `.js` import map.
+
+		/*
+		 * I know this section is trivial, but there is nothing I can do about it right now.
+		 */
+		this.virtualStylesheet = new CSSStyleSheet();
 	};
 
 	public get head(): Component<HeadAttributes> {
@@ -58,11 +118,20 @@ export class App extends Component<AppConfig> {
 	 * Call this function to render the app.
 	 * You don't need to call this function again after the first render.
 	 */
-	public render(): Node {
-		return render({
+	public render(): Document {
+		const node = render({
 			root: new Component({ children: this.config.children, }, Symbol('html')),
 			registry: this.config.registry,
 		});
+
+		// ! `documentElement` isn't defined on the `Document` interface.
+		// if (this.document.documentElement) {
+		// 	this.document.documentElement.replaceWith(node);
+		// } else {
+		this.document.appendChild(node); // This becomes `documentElement`.
+		// };
+
+		return this.document;
 	};
 
 	/**
@@ -71,45 +140,11 @@ export class App extends Component<AppConfig> {
 	 * The content can be "thawed" using the `thaw` function.
 	 */
 	public freeze(): string {
-		return (this.render() as Element).outerHTML;
+		return this.render().documentElement.outerHTML;
 	};
 
 	// public thaw(content: string): Node {
 	// 	const node = window.document.createRange().createContextualFragment(content);
 
 	// };
-};
-
-export type AppCreationConfig = {
-	setup?: (app: App, registry: Registry) => void,
-};
-
-/**
- * Creates a new app instance.
- * 
- * @param root - Expects a fragment of [{@link Head}, {@link Body}].
- * @param config - An optional configuration object.
- * @returns {App}
- */
-export function createApp(root: Component, config: AppCreationConfig = {}): App {
-	const registry: Registry = new WeakMap();
-
-
-	const app = new App({ children: root.config.children, registry: registry, });
-
-	if (config.setup) {
-		config.setup(app, new WeakMap());
-	} else {
-		hook(app, (component: Component) => {
-			// console.log(`Re-rendering... ${component.config}`);
-
-			let oldNode: Node = registry.get(component.key)!;
-			let newNode: Node = render({ root: component, registry: registry, });
-
-			// TODO: Ensure every `oldNode` is a `ChildNode`.
-			(oldNode as ChildNode).replaceWith(newNode);
-		});
-	};
-
-	return app;
 };
