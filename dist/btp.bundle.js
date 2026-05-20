@@ -1,0 +1,1086 @@
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __commonJS = (cb, mod) => function __require() {
+  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+
+// ../../../.cache/deno/npm/registry.npmjs.org/eventemitter3/5.0.4/index.js
+var require__ = __commonJS({
+  "../../../.cache/deno/npm/registry.npmjs.org/eventemitter3/5.0.4/index.js"(exports, module) {
+    "use strict";
+    var has = Object.prototype.hasOwnProperty;
+    var prefix = "~";
+    function Events() {
+    }
+    if (Object.create) {
+      Events.prototype = /* @__PURE__ */ Object.create(null);
+      if (!new Events().__proto__) prefix = false;
+    }
+    function EE(fn, context, once) {
+      this.fn = fn;
+      this.context = context;
+      this.once = once || false;
+    }
+    function addListener(emitter, event, fn, context, once) {
+      if (typeof fn !== "function") {
+        throw new TypeError("The listener must be a function");
+      }
+      var listener = new EE(fn, context || emitter, once), evt = prefix ? prefix + event : event;
+      if (!emitter._events[evt]) emitter._events[evt] = listener, emitter._eventsCount++;
+      else if (!emitter._events[evt].fn) emitter._events[evt].push(listener);
+      else emitter._events[evt] = [
+        emitter._events[evt],
+        listener
+      ];
+      return emitter;
+    }
+    function clearEvent(emitter, evt) {
+      if (--emitter._eventsCount === 0) emitter._events = new Events();
+      else delete emitter._events[evt];
+    }
+    function EventEmitter2() {
+      this._events = new Events();
+      this._eventsCount = 0;
+    }
+    EventEmitter2.prototype.eventNames = function eventNames() {
+      var names = [], events, name;
+      if (this._eventsCount === 0) return names;
+      for (name in events = this._events) {
+        if (has.call(events, name)) names.push(prefix ? name.slice(1) : name);
+      }
+      if (Object.getOwnPropertySymbols) {
+        return names.concat(Object.getOwnPropertySymbols(events));
+      }
+      return names;
+    };
+    EventEmitter2.prototype.listeners = function listeners(event) {
+      var evt = prefix ? prefix + event : event, handlers = this._events[evt];
+      if (!handlers) return [];
+      if (handlers.fn) return [
+        handlers.fn
+      ];
+      for (var i = 0, l = handlers.length, ee = new Array(l); i < l; i++) {
+        ee[i] = handlers[i].fn;
+      }
+      return ee;
+    };
+    EventEmitter2.prototype.listenerCount = function listenerCount(event) {
+      var evt = prefix ? prefix + event : event, listeners = this._events[evt];
+      if (!listeners) return 0;
+      if (listeners.fn) return 1;
+      return listeners.length;
+    };
+    EventEmitter2.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
+      var evt = prefix ? prefix + event : event;
+      if (!this._events[evt]) return false;
+      var listeners = this._events[evt], len = arguments.length, args, i;
+      if (listeners.fn) {
+        if (listeners.once) this.removeListener(event, listeners.fn, void 0, true);
+        switch (len) {
+          case 1:
+            return listeners.fn.call(listeners.context), true;
+          case 2:
+            return listeners.fn.call(listeners.context, a1), true;
+          case 3:
+            return listeners.fn.call(listeners.context, a1, a2), true;
+          case 4:
+            return listeners.fn.call(listeners.context, a1, a2, a3), true;
+          case 5:
+            return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;
+          case 6:
+            return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;
+        }
+        for (i = 1, args = new Array(len - 1); i < len; i++) {
+          args[i - 1] = arguments[i];
+        }
+        listeners.fn.apply(listeners.context, args);
+      } else {
+        var length = listeners.length, j;
+        for (i = 0; i < length; i++) {
+          if (listeners[i].once) this.removeListener(event, listeners[i].fn, void 0, true);
+          switch (len) {
+            case 1:
+              listeners[i].fn.call(listeners[i].context);
+              break;
+            case 2:
+              listeners[i].fn.call(listeners[i].context, a1);
+              break;
+            case 3:
+              listeners[i].fn.call(listeners[i].context, a1, a2);
+              break;
+            case 4:
+              listeners[i].fn.call(listeners[i].context, a1, a2, a3);
+              break;
+            default:
+              if (!args) for (j = 1, args = new Array(len - 1); j < len; j++) {
+                args[j - 1] = arguments[j];
+              }
+              listeners[i].fn.apply(listeners[i].context, args);
+          }
+        }
+      }
+      return true;
+    };
+    EventEmitter2.prototype.on = function on(event, fn, context) {
+      return addListener(this, event, fn, context, false);
+    };
+    EventEmitter2.prototype.once = function once(event, fn, context) {
+      return addListener(this, event, fn, context, true);
+    };
+    EventEmitter2.prototype.removeListener = function removeListener(event, fn, context, once) {
+      var evt = prefix ? prefix + event : event;
+      if (!this._events[evt]) return this;
+      if (!fn) {
+        clearEvent(this, evt);
+        return this;
+      }
+      var listeners = this._events[evt];
+      if (listeners.fn) {
+        if (listeners.fn === fn && (!once || listeners.once) && (!context || listeners.context === context)) {
+          clearEvent(this, evt);
+        }
+      } else {
+        for (var i = 0, events = [], length = listeners.length; i < length; i++) {
+          if (listeners[i].fn !== fn || once && !listeners[i].once || context && listeners[i].context !== context) {
+            events.push(listeners[i]);
+          }
+        }
+        if (events.length) this._events[evt] = events.length === 1 ? events[0] : events;
+        else clearEvent(this, evt);
+      }
+      return this;
+    };
+    EventEmitter2.prototype.removeAllListeners = function removeAllListeners(event) {
+      var evt;
+      if (event) {
+        evt = prefix ? prefix + event : event;
+        if (this._events[evt]) clearEvent(this, evt);
+      } else {
+        this._events = new Events();
+        this._eventsCount = 0;
+      }
+      return this;
+    };
+    EventEmitter2.prototype.off = EventEmitter2.prototype.removeListener;
+    EventEmitter2.prototype.addListener = EventEmitter2.prototype.on;
+    EventEmitter2.prefixed = prefix;
+    EventEmitter2.EventEmitter = EventEmitter2;
+    if ("undefined" !== typeof module) {
+      module.exports = EventEmitter2;
+    }
+  }
+});
+
+// ../../../.cache/deno/npm/registry.npmjs.org/eventemitter3/5.0.4/index.mjs
+var import_index = __toESM(require__(), 1);
+
+// ../rynth/src/lifecycle.ts
+var Lifecycle = class extends import_index.default {
+  methods;
+  cleanupTasks;
+  addCleanupTask(task) {
+    this.cleanupTasks.push(task);
+  }
+  resum\u00E9;
+  paused;
+  constructor(methods) {
+    super(), this.methods = methods, this.cleanupTasks = [], this.resum\u00E9 = [], this.paused = false;
+    this.on("pause", () => {
+      this.paused = true;
+    });
+    this.on("resume", () => {
+      this.paused = false;
+      this.resum\u00E9.forEach(([event, ...args]) => {
+        this.methods[event]?.();
+        this.emit(event, ...args);
+      });
+      this.resum\u00E9 = [];
+    });
+  }
+  emit(event, ...args) {
+    if (this.paused) {
+      this.resum\u00E9.push([
+        event,
+        ...args
+      ]);
+    } else {
+      this.methods[event]?.();
+      super.emit(event, ...args);
+    }
+    ;
+    return true;
+  }
+  cleanup() {
+    this.cleanupTasks.forEach((task) => task());
+    this.cleanupTasks = [];
+  }
+};
+
+// ../rynth/src/component.ts
+var Component = class _Component {
+  config;
+  key;
+  lifecycle;
+  constructor(config, key = Symbol()) {
+    this.config = config;
+    this.key = key;
+    this.lifecycle = new Lifecycle({});
+    this.lifecycle.on("unmount", () => this.dispose());
+  }
+  /**
+  * Disposes of the {@link Component}, and all of its children.
+  */
+  dispose() {
+    this.lifecycle.cleanup();
+    for (const child of this.config.children) {
+      if (child instanceof _Component) {
+        child.lifecycle.emit("unmount");
+      }
+      ;
+    }
+    ;
+  }
+};
+
+// ../rynth/src/jsx-runtime.ts
+var FragmentFactory = class {
+  of(config) {
+    return new Component(config);
+  }
+};
+var Fragment = class extends FragmentFactory {
+};
+function jsx(type, config) {
+  const children = config.children instanceof Array ? config.children : [
+    config.children
+  ];
+  return new type().of({
+    ...config,
+    children
+  });
+}
+function jsxs(type, config) {
+  let children = [];
+  for (const child of config.children) {
+    if (child instanceof Component) {
+      children.push(child);
+      continue;
+    }
+    ;
+    children.push(jsx(FragmentFactory, {
+      children: [
+        child
+      ]
+    }));
+  }
+  ;
+  return new type().of({
+    ...config,
+    children
+  });
+}
+
+// ../rynth/src/signal.ts
+var Signal = class _Signal {
+  _value;
+  listeners = /* @__PURE__ */ new Set();
+  constructor(value) {
+    this._value = value;
+  }
+  /**
+  * Subscribe to the signal.
+  * 
+  * @param listener - The listener to be called when the signal value changes.
+  * 
+  * @returns A function that unsubscribes the listener when called.
+  */
+  subscribe(listener) {
+    this.listeners.add(listener);
+    return () => {
+      this.listeners.delete(listener);
+    };
+  }
+  notify() {
+    for (const listener of this.listeners) {
+      try {
+        listener(this._value);
+      } catch (err) {
+      }
+      ;
+    }
+    ;
+  }
+  get value() {
+    return this._value;
+  }
+  set value(value) {
+    this._value = value;
+    this.notify();
+  }
+  map(func) {
+    const signal = new _Signal(func(this.value));
+    const unsubscribe = this.subscribe((value) => {
+      signal.value = func(value);
+    });
+    return signal;
+  }
+  toString() {
+    return String(this.value);
+  }
+  /**
+  * Returns the current value of the signal.
+  * 
+  * This is useful because if the signal is a subclass of {@link Signal<T>}, returns the value of the underlying signal.
+  * Otherwise, returns the value itself (as a primitive).
+  */
+  valueOf() {
+    return this.value;
+  }
+};
+function unwrap(value) {
+  return value instanceof Signal ? value.value : value;
+}
+
+// ../rynth/src/hook.ts
+function hook(root, callback) {
+  for (const child of root.config.children) {
+    if (child instanceof Component) {
+      hook(child, callback);
+      continue;
+    }
+    ;
+    if (child instanceof Signal) {
+      const unsubscribe = child.subscribe(() => {
+        callback(root, child);
+      });
+      root.lifecycle.addCleanupTask(unsubscribe);
+      continue;
+    }
+    ;
+  }
+  ;
+  for (const [key, value] of Object.entries(root.config)) {
+    if (key === "children") {
+      continue;
+    }
+    ;
+    if (value instanceof Signal) {
+      const unsubscribe = value.subscribe(() => {
+        callback(root, value);
+      });
+      root.lifecycle.addCleanupTask(unsubscribe);
+      continue;
+    }
+    ;
+  }
+  ;
+}
+
+// src/APIs/trigger.ts
+(function(On2) {
+  function setup(element, config) {
+    Object.keys(config).forEach((key) => {
+      if (config[key] !== void 0 && key.match(/^on\:/)) {
+        element.addEventListener(key.replace("on:", "").toLowerCase(), unwrap(config[key]));
+      }
+      ;
+    });
+  }
+  On2.setup = setup;
+})(On || (On = {}));
+var On;
+
+// src/APIs/styles.ts
+(function(Style3) {
+  class Sheet {
+  }
+  Style3.Sheet = Sheet;
+  function convertToStyleElement(sheet) {
+    const cssText = Array.from(sheet.cssRules).map((rule) => rule.cssText).join("\n");
+    const styleElement = globalThis.document.createElement("style");
+    styleElement.textContent = cssText;
+    return styleElement;
+  }
+  function setup(element, sheet) {
+    if (sheet === void 0) {
+      return;
+    }
+    ;
+    let shadow;
+    try {
+      shadow = element.attachShadow({
+        mode: "open"
+      });
+    } catch (error) {
+      shadow = element.shadowRoot;
+      if (!(shadow ?? false)) {
+        console.error(`Element cannot host a shadow root or is closed: ${error}.`);
+        console.log(element.tagName, element.shadowRoot);
+        return;
+      }
+      ;
+    }
+    ;
+    shadow.appendChild(convertToStyleElement(sheet));
+    if (shadow.querySelector("slot") ?? true) {
+      const slot = globalThis.document.createElement("slot");
+      shadow.appendChild(slot);
+    }
+    ;
+    console.log(element.querySelectorAll(".crumb").entries().toArray().map((node) => node[1].tagName));
+  }
+  Style3.setup = setup;
+})(Style || (Style = {}));
+var Style;
+
+// src/index.ts
+function setupComponent(component) {
+  component.lifecycle.on("mount", ({ node }) => {
+    if (node.nodeType == Node.ELEMENT_NODE) {
+      const element = node;
+      On.setup(element, component.config);
+      Style.setup(element, component.config.style);
+      return;
+    }
+    ;
+    if (node.childNodes.length == 1) {
+    }
+    ;
+  });
+}
+function componentFunction(func, base = class {
+}) {
+  const factory = class extends base {
+    of(config) {
+      const component = func(config);
+      setupComponent(component);
+      return component;
+    }
+  };
+  return factory;
+}
+function primitive(func, key) {
+  return class {
+    symbol = key;
+    of(config) {
+      const component = func(new Component(config, key));
+      setupComponent(component);
+      return component;
+    }
+  };
+}
+
+// src/components/head.tsx
+var Head = primitive((component) => {
+  return component;
+}, Symbol("head"));
+
+// src/components/body.tsx
+var Body = primitive((component) => {
+  return component;
+}, Symbol("body"));
+
+// src/components/header.tsx
+var Header = primitive((component) => {
+  return component;
+}, Symbol("header"));
+
+// src/components/navigation.tsx
+var Navigation = primitive((component) => {
+  return component;
+}, Symbol("nav"));
+
+// src/components/div.tsx
+var Div = primitive((component) => {
+  return component;
+}, Symbol("div"));
+
+// src/components/span.tsx
+var Span = primitive((component) => {
+  return component;
+}, Symbol("span"));
+
+// src/components/text.tsx
+var Text = componentFunction((config) => {
+  const signal = config["bind:value"] || config.children.join();
+  const component = new Component({
+    ...config,
+    children: [
+      signal
+    ]
+  }, Symbol("glacer-text"));
+  return component;
+});
+
+// src/components/link.tsx
+var Link = primitive((component) => {
+  return component;
+}, Symbol("glacier-anchor"));
+
+// src/components/break.tsx
+var Break = primitive((component) => {
+  return component;
+}, Symbol("br"));
+
+// src/components/meta.tsx
+var Meta = class {
+  symbol = Symbol("meta");
+  of(config) {
+    if (config.name == "title") {
+      return new Component({
+        children: config.children
+      }, Symbol("title"));
+    }
+    ;
+    const newConfig = {
+      name: config.name,
+      value: String(config.children[0]),
+      children: []
+    };
+    return new Component(newConfig, this.symbol);
+  }
+};
+
+// src/components/style.tsx
+var Style2 = primitive((component) => {
+  return component;
+}, Symbol("style"));
+
+// src/components/button.tsx
+var Button = primitive((component) => {
+  return component;
+}, Symbol("button"));
+
+// ../../../.cache/deno/npm/registry.npmjs.org/iron-enum/1.8.0/dist/mod.js
+function enumFactory(_allVariants, tag, data, instance) {
+  if (tag === "_") throw new Error("'_' is reserved as a fallback key.");
+  const self = {};
+  const is = (key) => key === tag;
+  const _if = (key, success, failure) => {
+    const hit = key === tag;
+    if (hit) {
+      if (success) {
+        const r = success(data, self);
+        return r === void 0 ? true : r;
+      }
+      return true;
+    }
+    if (failure) {
+      const r = failure(self);
+      return r === void 0 ? false : r;
+    }
+    return false;
+  };
+  const _ifNot = (key, success, failure) => {
+    const miss = key !== tag;
+    if (miss) {
+      if (success) {
+        const r = success(self);
+        return r === void 0 ? true : r;
+      }
+      return true;
+    }
+    if (failure) {
+      const r = failure(data, self);
+      return r === void 0 ? false : r;
+    }
+    return false;
+  };
+  const match = (callbacks) => {
+    const specific = callbacks[tag];
+    const cb = specific ?? callbacks._;
+    if (!cb) {
+      throw new Error(`No handler for '${String(tag)}' and no '_' fallback`);
+    }
+    return specific ? cb(data, self) : cb(self);
+  };
+  const matchAsync = async (callbacks) => {
+    const specific = callbacks[tag];
+    const cb = specific ?? callbacks._;
+    if (!cb) {
+      throw new Error(`No handler for '${String(tag)}' and no '_' fallback`);
+    }
+    return specific ? cb(data, self) : cb(self);
+  };
+  const matchExhaustive = (callbacks) => {
+    const cb = callbacks[tag];
+    return cb(data, self);
+  };
+  const selfProperties = {
+    tag,
+    data,
+    instance,
+    toJSON: () => ({
+      tag,
+      data
+    }),
+    is,
+    if: _if,
+    ifNot: _ifNot,
+    match,
+    matchAsync,
+    matchExhaustive
+  };
+  Object.assign(self, selfProperties);
+  return self;
+}
+function IronEnum(args) {
+  const keys = args?.keys;
+  let result = {};
+  const parse = (dataObj) => {
+    const actualKey = dataObj.tag;
+    if (keys?.length && !keys.includes(actualKey)) {
+      throw new Error(`Unexpected variant '${actualKey}'`);
+    }
+    return enumFactory({}, actualKey, dataObj.data, result);
+  };
+  const _ = {
+    typeTags: void 0,
+    typeData: void 0,
+    typeOf: void 0,
+    typeJson: void 0,
+    parse,
+    fromJSON: parse,
+    reviver(obj) {
+      if (obj && typeof obj === "object" && "tag" in obj && "data" in obj) {
+        return parse(obj);
+      }
+      return obj;
+    }
+  };
+  if (keys?.length) {
+    result = {
+      _
+    };
+    for (const key of keys) {
+      result[key] = (...args2) => enumFactory({}, key, args2[0], result);
+    }
+    return result;
+  }
+  const BUILTINS = /* @__PURE__ */ new Set([
+    "toString",
+    "valueOf",
+    "inspect",
+    "constructor"
+  ]);
+  result = new Proxy({}, {
+    get: (_tgt, prop) => {
+      if (prop === "_") return _;
+      if (typeof prop !== "string") return void 0;
+      if (BUILTINS.has(prop)) {
+        const fn = Object.prototype[prop];
+        return typeof fn === "function" ? fn.bind(result) : void 0;
+      }
+      return (...args2) => {
+        const data = args2[0];
+        return enumFactory({}, prop, data, result);
+      };
+    }
+  });
+  return result;
+}
+
+// src/components/input.tsx
+var InputData = IronEnum();
+var InputType = IronEnum();
+
+// src/components/show.tsx
+var Show = componentFunction((config) => {
+  const { when } = config;
+  const child = /* @__PURE__ */ jsx(Fragment, {});
+  child.config.children = config.children;
+  const childSignal = new Signal(null);
+  const wrapper = new Component({
+    ...config,
+    children: [
+      childSignal
+    ]
+  }, Symbol("slot"));
+  const unsubscribe = when.subscribe((value) => {
+    if (value) {
+      childSignal.value = child;
+    } else {
+      childSignal.value = null;
+    }
+    ;
+  });
+  wrapper.lifecycle.on("unmount", () => {
+    unsubscribe();
+  });
+  if (when.value) {
+    childSignal.value = child;
+  }
+  ;
+  return wrapper;
+});
+
+// src/components.tsx
+if (globalThis["window"] !== void 0) {
+  globalThis.customElements.define("glacier-text", class extends HTMLElement {
+    constructor() {
+      super();
+    }
+  });
+  globalThis.customElements.define("glacier-anchor", class extends HTMLElement {
+    static get observedAttributes() {
+      return [
+        "reference"
+      ];
+    }
+    constructor() {
+      super();
+      const shadow = this.attachShadow({
+        mode: "open"
+      });
+      const anchor = globalThis.document.createElement("a");
+      anchor.href = this.getAttribute("reference") || "#.tsx";
+      const slot = globalThis.document.createElement("slot");
+      anchor.appendChild(slot);
+      anchor.style.all = "inherit";
+      shadow.appendChild(anchor);
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (name === "reference") {
+        const anchor = this.shadowRoot?.firstChild;
+        anchor.href = newValue;
+      }
+      ;
+      console.log(name);
+    }
+  });
+  globalThis.customElements.define("glacier-shadow", class extends HTMLElement {
+    constructor() {
+      super();
+      const shadow = this.attachShadow({
+        mode: "open"
+      });
+      const slot = globalThis.document.createElement("slot");
+      shadow.appendChild(slot);
+    }
+  });
+}
+var Shadow = primitive((component) => {
+  if (component.config.children.length !== 1) {
+    console.error("Shadow component must have 1 child.");
+    return /* @__PURE__ */ jsx(Missing, {});
+  }
+  ;
+  return component;
+}, Symbol("glacier-shadow"));
+var Missing = primitive((component) => {
+  return component;
+}, Symbol("glacier-missing"));
+
+// src/render.tsx
+function resolveChild({ child, registry, root }) {
+  if (child instanceof Component) {
+    return render({
+      root: child,
+      registry
+    });
+  }
+  ;
+  if (child instanceof Signal) {
+    const placeholder = globalThis.document.createComment("signal");
+    let currentNode = null;
+    let lastValue = child.value;
+    const mountForValue = (value) => {
+      if (value instanceof Component) {
+        return render({
+          root: value,
+          registry
+        });
+      }
+      ;
+      if (value === null) {
+        return null;
+      }
+      ;
+      if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+        return globalThis.document.createTextNode(String(value));
+      }
+      ;
+      return null;
+    };
+    currentNode = mountForValue(lastValue);
+    const nodeToReturn = currentNode ?? placeholder;
+    const unsubscribe = child.subscribe((value) => {
+      if (value === lastValue) return;
+      const previous = lastValue;
+      lastValue = value;
+      if (previous instanceof Component) {
+        previous.lifecycle.emit("unmount");
+        registry.delete(previous.key);
+      }
+      ;
+      const newNode = mountForValue(value);
+      if (newNode) {
+        if (currentNode) {
+          currentNode.replaceWith(newNode);
+        } else {
+          placeholder.replaceWith(newNode);
+        }
+        ;
+        currentNode = newNode;
+      } else {
+        if (currentNode) {
+          currentNode.replaceWith(placeholder);
+          currentNode = null;
+        }
+        ;
+      }
+      ;
+    });
+    root.lifecycle.addCleanupTask(unsubscribe);
+    return nodeToReturn;
+  }
+  ;
+  if (typeof child === "string" || typeof child === "number" || typeof child === "boolean") {
+    return globalThis.document.createTextNode(String(child));
+  }
+  ;
+  return null;
+}
+function render({ root, registry }) {
+  const isFragment = root.key.description === void 0 ? true : root.key.description === "";
+  if (isFragment) {
+    if (root.config.children.length === 0) {
+      const empty = globalThis.document.createTextNode("");
+      registry.set(root.key, empty);
+      return empty;
+    }
+    ;
+    const fragment = globalThis.document.createDocumentFragment();
+    let firstNode = null;
+    for (const child of root.config.children) {
+      const childNode = resolveChild({
+        child,
+        registry,
+        root
+      });
+      if (childNode) {
+        fragment.appendChild(childNode);
+        if (!firstNode) {
+          firstNode = childNode;
+        }
+        ;
+      }
+      ;
+    }
+    ;
+    if (firstNode) {
+      registry.set(root.key, firstNode);
+    }
+    ;
+    return root.config.children.length === 1 && firstNode ? firstNode : fragment;
+  }
+  ;
+  const node = window.document.createElement(root.key.description);
+  registry.set(root.key, node);
+  for (const [key, value] of Object.entries(root.config)) {
+    if (key === "children") {
+      continue;
+    }
+    ;
+    if (value instanceof Signal) {
+      const v = value.value;
+      if (v == null) {
+        node.removeAttribute(key);
+      } else {
+        node.setAttribute(key, String(v));
+      }
+      ;
+      const unsubscribeAttribute = value.subscribe((value2) => {
+        if (value2 == null) {
+          node.removeAttribute(key);
+        } else {
+          node.setAttribute(key, String(value2));
+        }
+        ;
+      });
+      root.lifecycle.addCleanupTask(unsubscribeAttribute);
+      continue;
+    }
+    ;
+    if (value == null) {
+      node.removeAttribute(key);
+    } else {
+      node.setAttribute(key, String(value));
+    }
+    ;
+  }
+  ;
+  for (const child of root.config.children) {
+    const childNode = resolveChild({
+      child,
+      registry,
+      root
+    });
+    if (childNode) {
+      node.appendChild(childNode);
+    }
+    ;
+  }
+  ;
+  root.lifecycle.emit("mount", {
+    node
+  });
+  return node;
+}
+
+// src/app.ts
+var AppError = class extends Error {
+  fatal;
+  constructor(config) {
+    super(config.message);
+    this.name = "AppError";
+    this.fatal = config.fatal;
+  }
+};
+var App = class _App extends Component {
+  /**
+  * Creates a new app instance.
+  * 
+  * @param root - Expects a fragment of [{@link Head}, {@link Body}].
+  * @param config - An optional configuration object.
+  * @returns {App}.
+  */
+  static create(root, config = {}) {
+    const registry = /* @__PURE__ */ new WeakMap();
+    const app2 = new _App({
+      children: root.config.children,
+      registry
+    });
+    if (config.setup) {
+      config.setup(app2, /* @__PURE__ */ new WeakMap());
+    } else {
+      hook(app2, (component) => {
+        const oldNode = registry.get(component.key);
+        const newNode = render({
+          root: component,
+          registry
+        });
+        oldNode.replaceWith(newNode);
+      });
+    }
+    ;
+    return app2;
+  }
+  document = new Document();
+  virtualStylesheet;
+  constructor(config) {
+    if (!(config.children[0] instanceof Component) || !(config.children[1] instanceof Component)) {
+      throw new AppError({
+        message: "App must have a <head> and <body> element.",
+        fatal: true
+      });
+    }
+    ;
+    if (config.children[0].key.description !== "head") {
+      throw new AppError({
+        message: "App must have a <head> element (first child).",
+        fatal: true
+      });
+    }
+    ;
+    if (config.children[1].key.description !== "body") {
+      throw new AppError({
+        message: "App must have a <body> element (second child).",
+        fatal: true
+      });
+    }
+    ;
+    super(config, Symbol(""));
+    this.virtualStylesheet = new CSSStyleSheet();
+  }
+  get head() {
+    return this.config.children[0];
+  }
+  get body() {
+    return this.config.children[1];
+  }
+  /**
+  * Call this function to render the app.
+  * You don't need to call this function again after the first render.
+  */
+  render() {
+    const node = render({
+      root: new Component({
+        children: this.config.children
+      }, Symbol("html")),
+      registry: this.config.registry
+    });
+    this.document.appendChild(node);
+    return this.document;
+  }
+  /**
+  * Generate a static *HTML* string representation of the app.
+  * You can use this for server-side rendering.
+  * The content can be "thawed" using the `thaw` function.
+  */
+  freeze() {
+    return this.render().documentElement.outerHTML;
+  }
+};
+
+// tests/backtopaper/components/card.tsx
+var Card = componentFunction((config) => {
+  return /* @__PURE__ */ jsx(Div, {
+    class: "card-container",
+    children: /* @__PURE__ */ jsx(Div, {
+      class: "card",
+      children: config.children
+    })
+  });
+});
+
+// tests/backtopaper/global.css
+var global_default = "@layer base {\n	@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;0,700;1,400&display=swap');\n\n	/*\n	 * Variable declarations.\n	 */\n	:root {\n		--primary: #E83256;\n	}\n\n	::selection {\n		background: var(--primary)\n	}\n}\n\n/*\n * Cards.\n */\n.card-container {\n	background: var(--primary);\n\n	.card {\n		background: var(--primary-compliment);\n	}\n}";
+
+// tests/backtopaper/app.tsx
+var app = App.create(/* @__PURE__ */ jsxs(Fragment, {
+  children: [
+    /* @__PURE__ */ jsxs(Head, {
+      children: [
+        /* @__PURE__ */ jsx(Meta, {
+          name: "title",
+          children: "Back to Paper"
+        }),
+        /* @__PURE__ */ jsx(Style2, {
+          children: global_default
+        })
+      ]
+    }),
+    /* @__PURE__ */ jsxs(Body, {
+      children: [
+        "EdTech is watching...",
+        /* @__PURE__ */ jsx(Card, {
+          children: "0% of lockdown browsers are secure."
+        })
+      ]
+    })
+  ]
+}));
+
+// tests/backtopaper/index.tsx
+globalThis.document.documentElement.replaceWith(app.render().documentElement);

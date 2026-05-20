@@ -2,11 +2,9 @@ import { Component, ComponentFactory, ComponentConfig, } from 'rynth';
 
 import { IronEnum, } from 'iron-enum';
 
-import Color from 'colorjs.io';
+import { CommonAttributes, } from '#~/common.tsx';
 
-import { CommonAttributes, } from '#~/common';
-
-import { Time, } from '#~/APIs/time';
+import { Time, } from '#~/APIs/time.ts';
 
 export const InputData = IronEnum<{
 	Text: string,
@@ -23,7 +21,7 @@ export const InputData = IronEnum<{
 	// TODO: Add URL type.
 	URL: string,
 	Time: Time,
-	Color: Color,
+	// Color: Color,
 }>();
 
 export const InputType = IronEnum<{
@@ -88,9 +86,9 @@ export class Input implements ComponentFactory<InputAttributes> {
 			Time: () => {
 				newConfig.type = InputType.Time();
 			},
-			Color: () => {
+			/*Color: () => {
 				newConfig.type = InputType.Color();
-			},
+			},*/
 		});
 
 		return new Component(newConfig, this.symbol);

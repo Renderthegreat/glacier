@@ -1,8 +1,8 @@
 import { Component, } from 'rynth';
 
-import { CommonAttributes, } from '#~/common';
-import { Binding, } from '#~/binding';
-import { componentFunction, } from '#~/index';
+import { CommonAttributes, } from '#~/common.tsx';
+import { Binding, } from '#~/binding.ts';
+import { componentFunction, } from '#~/index.ts';
 
 export type TextAttributes = {} & CommonAttributes & Binding<string>;
 export const Text = componentFunction<TextAttributes>((config) => {

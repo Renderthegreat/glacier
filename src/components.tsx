@@ -1,47 +1,49 @@
 // # Blocks.
 
-import { primitive, } from '#~/index';
+import { primitive, } from '#~/index.ts';
 
-export * from '#~/components/head';
-export * from '#~/components/body';
+export * from '#~/components/head.tsx';
+export * from '#~/components/body.tsx';
 
-export * from '#~/components/header';
+export * from '#~/components/header.tsx';
 
-export * from '#~/components/navigation';
+export * from '#~/components/navigation.tsx';
 
-export * from '#~/components/div';
-export * from '#~/components/span';
+export * from '#~/components/div.tsx';
+export * from '#~/components/span.tsx';
 
-export * from '#~/components/text';
+export * from '#~/components/text.tsx';
 
-export * from '#~/components/link';
+export * from '#~/components/link.tsx';
 
-export * from '#~/components/canvas';
+export * from '#~/components/canvas.tsx';
 
-export * from '#~/components/break';
+export * from '#~/components/break.tsx';
 
 // # Head elements.
-export * from '#~/components/meta';
+export * from '#~/components/meta.tsx';
+export * from '#~/components/style.tsx';
+
 
 // # ...
-export * from '#~/components/button';
-export * from '#~/components/input';
+export * from '#~/components/button.tsx';
+export * from '#~/components/input.tsx';
 
 // # State based.
-export * from '#~/components/show';
-export * from '#~/components/collection';
+export * from '#~/components/show.tsx';
+export * from '#~/components/collection.tsx';
 
 // # Custom components
 
 // Check to ensure we are running in the browser.
 if (globalThis['window'] !== undefined) {
-	window.customElements.define('glacier-text', class extends HTMLElement {
+	globalThis.customElements.define('glacier-text', class extends HTMLElement {
 		public constructor() {
 			super();
 		};
 	});
 
-	window.customElements.define('glacier-anchor', class extends HTMLElement {
+	globalThis.customElements.define('glacier-anchor', class extends HTMLElement {
 		public static get observedAttributes(): string[] {
 			return ['reference'];
 		};
@@ -51,10 +53,10 @@ if (globalThis['window'] !== undefined) {
 
 			const shadow = this.attachShadow({ mode: 'open', });
 
-			const anchor = window.document.createElement('a');
-			anchor.href = this.getAttribute('reference') || '#';
+			const anchor = globalThis.document.createElement('a');
+			anchor.href = this.getAttribute('reference') || '#.tsx';
 
-			const slot = window.document.createElement('slot');
+			const slot = globalThis.document.createElement('slot');
 			anchor.appendChild(slot);
 
 			anchor.style.all = 'inherit'; // Inherit all styles from the `glacier-anchor`.
@@ -72,20 +74,20 @@ if (globalThis['window'] !== undefined) {
 		};
 	});
 
-	window.customElements.define('glacier-shadow', class extends HTMLElement {
+	globalThis.customElements.define('glacier-shadow', class extends HTMLElement {
 		public constructor() {
 			super();
 
 			const shadow = this.attachShadow({ mode: 'open', });
 
-			const slot = window.document.createElement('slot');
+			const slot = globalThis.document.createElement('slot');
 
 			shadow.appendChild(slot);
 		};
 	});
 };
 
-export const Shadow = primitive<{}>((component) => {
+export const Shadow = primitive<Record<PropertyKey, never>>((component) => {
 	if (component.config.children.length !== 1) {
 		// TODO: Handle error using *Glacier*.	
 		console.error('Shadow component must have 1 child.');

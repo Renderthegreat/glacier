@@ -1,8 +1,8 @@
 import * as Rynth from 'rynth';
 
-import { componentFunction, } from '#~/index';
+import { componentFunction, } from '#~/index.ts';
 
-import { CommonAttributes, } from '#~/common';
+import { CommonAttributes, } from '#~/common.tsx';
 
 export type DisconnectedAttributes = {
 	readonly key: unique symbol;

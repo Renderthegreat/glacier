@@ -1,7 +1,7 @@
 import { Component, } from 'rynth';
 
-import { CommonAttributes, } from '#~/common';
-import { primitive, } from '#~/index';
+import { CommonAttributes, } from '#~/common.tsx';
+import { primitive, } from '#~/index.ts';
 
 export type BodyAttributes = {} & CommonAttributes;
 /**

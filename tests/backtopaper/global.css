@@ -1,17 +1,50 @@
 /*
- * Variable declations.
+ * Global layer.
  */
-:root {
-	--primary: #1C1C1C;
-};
+@layer base {
+	@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+	/*
+	 * Light / Dark mode.
+	 */
+	
+	/* Light. */
+	@media (prefers-color-scheme: light) {
+		:root {
+			--background-color: #f0f0f0;
+			--foreground-color: #0f0f0f;
+		}
+	}
+
+	/* Dark. */
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--background-color: #0f0f0f;
+			--foreground-color: #f0f0f0;
+		}
+	}
+
+	
+
+	/*
+	 * Variable declarations.
+	 */
+	:root {
+		--primary-color: #E83256;
+	}
+
+	::selection {
+		background: var(--primary)
+	}
+}
 
 /*
  * Cards.
  */
 .card-container {
-	background: var(--primary);
+	background: var(--);
 
 	& > .card {
-		filter: invert(1);
-	};
-};
+		background: var(--primary-compliment);
+	}
+}

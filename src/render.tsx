@@ -1,4 +1,4 @@
-import { Component, Child, Signal, } from 'rynth';
+import { Component, type Child, Signal, } from 'rynth';
 
 /**
  * A very simple registry that maps keys to nodes.
@@ -16,10 +16,10 @@ function resolveChild({ child, registry, root, }: { child: Child, registry: Regi
 
 	if (child instanceof Signal) {
 		// We always return a stable Node (either the initial rendered node or a placeholder) so that future updates can replace it in-place.
-		const placeholder = window.document.createComment('signal');
+		const placeholder = globalThis.document.createComment('signal');
 
 		let currentNode: Node | null = null;
-		let lastValue: any = child.value;
+		let lastValue = child.value;
 
 		const mountForValue = (value: any): Node | null => {
 			if (value instanceof Component) {
@@ -31,7 +31,7 @@ function resolveChild({ child, registry, root, }: { child: Child, registry: Regi
 			};
 
 			if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-				return window.document.createTextNode(String(value));
+				return globalThis.document.createTextNode(String(value));
 			};
 
 			return null;
@@ -42,7 +42,7 @@ function resolveChild({ child, registry, root, }: { child: Child, registry: Regi
 		const nodeToReturn = currentNode ?? placeholder;
 
 		// Subscribe to future updates and swap nodes in the DOM as needed.
-		const unsubscribe = child.subscribe((value: any) => {
+		const unsubscribe = child.subscribe((value) => {
 			if (value === lastValue) return;
 
 			const previous = lastValue;
@@ -79,7 +79,7 @@ function resolveChild({ child, registry, root, }: { child: Child, registry: Regi
 	};
 
 	if (typeof child === 'string' || typeof child === 'number' || typeof child === 'boolean') {
-		return window.document.createTextNode(String(child));
+		return globalThis.document.createTextNode(String(child));
 	};
 
 	return null;
@@ -97,13 +97,13 @@ export function render({ root, registry, }: { root: Component, registry: Registr
 	// Handle Fragments.
 	if (isFragment) {
 		if (root.config.children.length === 0) {
-			const empty = window.document.createTextNode('');
+			const empty = globalThis.document.createTextNode('');
 			registry.set(root.key, empty);
 
 			return empty;
 		};
 
-		const fragment = window.document.createDocumentFragment();
+		const fragment = globalThis.document.createDocumentFragment();
 		let firstNode: Node | null = null;
 
 		for (const child of root.config.children) {
@@ -145,15 +145,15 @@ export function render({ root, registry, }: { root: Component, registry: Registr
 				node.setAttribute(key, String(v));
 			};
 
-			const unsubscribeAttr = value.subscribe((nv: any) => {
-				if (nv == null) {
+			const unsubscribeAttribute = value.subscribe((value) => {
+				if (value == null) {
 					node.removeAttribute(key);
 				} else {
-					node.setAttribute(key, String(nv));
+					node.setAttribute(key, String(value));
 				};
 			});
 
-			root.lifecycle.addCleanupTask(unsubscribeAttr);
+			root.lifecycle.addCleanupTask(unsubscribeAttribute);
 
 			continue;
 		};

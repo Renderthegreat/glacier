@@ -8,6 +8,7 @@ import * as Rynth from 'rynth';
 	after?: Style.Properties,
 };*/
 
+// deno-lint-ignore no-namespace
 export namespace Style {
 	/*export type Properties = {
 		display?: Style.Display,
@@ -42,7 +43,7 @@ export namespace Style {
 			.join('\n')
 		;
 	
-		const styleElement = document.createElement('style');
+		const styleElement = globalThis.document.createElement('style');
 		styleElement.textContent = cssText;
 	
 		return styleElement;
@@ -77,7 +78,7 @@ export namespace Style {
 
 		// Include the original content.
 		if (shadow.querySelector('slot') ?? true) {
-			const slot = window.document.createElement('slot');
+			const slot = globalThis.document.createElement('slot');
 			shadow.appendChild(slot);
 		};
 

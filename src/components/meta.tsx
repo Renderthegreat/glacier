@@ -1,6 +1,6 @@
 import { Component, ComponentFactory, ComponentConfig, } from 'rynth';
 
-import { CommonAttributes, } from '#~/common';
+import { CommonAttributes, } from '#~/common.tsx';
 
 export type MetaAttributes = {
 	name: string,

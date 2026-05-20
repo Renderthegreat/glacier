@@ -16,7 +16,7 @@ export namespace Cursor {
 			y: Rynth.signal(0),
 		});
 
-		window.document.addEventListener('mousemove', (event) => {
+		globalThis.document.addEventListener('mousemove', (event) => {
 			position.value = {
 				x: Rynth.signal(event.clientX),
 				y: Rynth.signal(event.clientY),

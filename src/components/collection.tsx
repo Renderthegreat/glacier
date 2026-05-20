@@ -1,10 +1,10 @@
 import * as Rynth from 'rynth';
 
-import { CommonAttributes, } from '#~/common';
-import { Binding, } from '#~/binding';
-import { componentFunction, } from '#~/index';
+import { CommonAttributes, } from '#~/common.tsx';
+import { Binding, } from '#~/binding.ts';
+import { componentFunction, } from '#~/index.ts';
 
-import { Disconnected, } from '#~/components/disconnected';
+import { Disconnected, } from '#~/components/disconnected.tsx';
 
 /**
  * Items bound must strictly be {@link Disconnected}.

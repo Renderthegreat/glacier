@@ -1,28 +1,49 @@
 {
-	"name": "@render-labs/glacier",
+	"name": "@glacier/glacier",
 	"version": "0.0.0",
-	// Note: Deno doesn't natively use 'author', 'description', or 'license' fields in deno.json,
-	// but you can keep them if you are publishing to JSR or just want them for metadata.
+
 	"compilerOptions": {
-	  "lib": ["dom", "dom.iterable", "deno.ns"]
+		"lib": ["dom", "dom.iterable", "deno.ns"],
+
+		"jsx": "react-jsx",
+		"jsxImportSource": "rynth",
 	},
+	"lint": {
+		"rules": {
+			"exclude": [
+				"jsx-key",
+			],
+		},
+	},
+
+
 	"imports": {
-	  // Internal path aliases
-	  "#~/*": "./dist/src/*.js",
-	  "#tests/*": "./dist/tests/*.js",
-  
-	  // Dependencies (mapped to npm specifiers for Deno)
-	  "colorjs.io": "npm:colorjs.io@latest",
-	  "iron-enum": "npm:iron-enum@latest",
-	  "rynth": "jsr:../rynth", // Or "npm:../rynth" depending on how your local workspace is set up
-  
-	  // Dev Dependencies (Deno doesn't split dev/prod deps, they all live in imports)
-	  "html-inline-script-webpack-plugin": "npm:html-inline-script-webpack-plugin@latest",
-	  "html-webpack-plugin": "npm:html-webpack-plugin@latest",
-	  "typescript": "npm:typescript@latest",
-	  "webpack-cli": "npm:webpack-cli@latest"
+		// Internal path aliases.
+		"#~/": "./src/",
+		"#tests/": "./tests/",
+
+		"rynth": "../rynth/src/index.ts",
+		"rynth/jsx-runtime": "../rynth/src/jsx-runtime.ts",
+
+
+		// Dependencies.
+		// "colorjs.io": "npm:colorjs.io@latest",
+		"iron-enum": "npm:iron-enum@latest",
+		"type-fest": "npm:type-fest@latest",
+		
+		// Dev Dependencies.
+		"html-inline-script-webpack-plugin": "npm:html-inline-script-webpack-plugin@latest",
+		"html-webpack-plugin": "npm:html-webpack-plugin@latest",
+		"webpack-cli": "npm:webpack-cli@latest"
+		
 	},
+	"exports": {
+		".": "./src/index.ts",
+
+		"./jsx-runtime": "./src/jsx-runtime.ts"
+	},
+
 	"tasks": {
-	  "build": "bash scripts/build.sh"
-	}
-  }
+		"build": "bash scripts/build.sh"
+	},
+}

@@ -1,7 +1,6 @@
 import * as Rynth from 'rynth';
 
-import * as G from '#~/components';
-import { Style, } from '#~/APIs/styles';
+import * as G from '#~/components.tsx';
 
 export type Crumb = {
 	path: string,
@@ -33,7 +32,7 @@ export function generateNavigation(crumbs: Array<Crumb>, title: string): Rynth.C
 	return <G.Navigation style={navigationStyle}>
 		{
 			crumbs.map((crumb) => {
-				return <G.Link  style={crumbStyle} reference={crumb.path}>{crumb.name}</G.Link>;
+				return <G.Link style={crumbStyle} reference={crumb.path}>{crumb.name}</G.Link>;
 			})
 				.concat(<G.Text class='title'>{title}</G.Text>)
 		}

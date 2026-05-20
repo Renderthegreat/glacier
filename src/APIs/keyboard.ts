@@ -22,7 +22,7 @@ export namespace Keyboard {
 	};
 
 	export function get() {
-		// As of early 2026, there does exist a *Chrome* API for getting the layout of the keyboard: `window.navigator.keyboard`, but it is not available in other browsers yet.
+		// As of early 2026, there does exist a *Chrome* API for getting the layout of the keyboard: `globalThis.navigator.keyboard`, but it is not available in other browsers yet.
 		// Instead, to mock this behaviour we create a keyboard that collects the keys as they are pressed.
 		
 		const keys = new Map();
@@ -37,7 +37,7 @@ export namespace Keyboard {
 		});
 
 		// TODO: Determine if we should use the new *Glacier* APIs for this. 
-		window.document.addEventListener('keydown', (event) => {
+		globalThis.document.addEventListener('keydown', (event) => {
 			if (keys.has(event.key)) {
 				keys.get(event.key).down.value = true;
 			} else {
@@ -47,7 +47,7 @@ export namespace Keyboard {
 			};
 		});
 		
-		window.document.addEventListener('keyup', (event) => {
+		globalThis.document.addEventListener('keyup', (event) => {
 			if (keys.has(event.key)) {
 				keys.get(event.key).down.value = false;
 			};

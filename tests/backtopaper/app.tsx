@@ -1,31 +1,28 @@
 import * as Rynth from 'rynth';
 
-import * as G from '#~/components';
+import * as G from '#~/components.tsx';
 
-import { Style, } from '#~/APIs/styles';
+import { App, } from '#~/app.ts';
 
+import { Card, } from '#tests/backtopaper/components/card.tsx';
 
-import { App, } from '#~/app';
+import styleText from '#tests/backtopaper/global.css' with { type: 'text'};
 
-import { render, } from '#~/render';
-
-import { usePico, } from '#tests/backtopaper/utilities/pico';
-import { generateNavigation, } from '#tests/backtopaper/utilities/navigation';
-
-import { Header, } from '#tests/backtopaper/components/header';
 
 export const app: App = App.create(
 	<>
 		<G.Head>
 			<G.Meta name="title">Back to Paper</G.Meta>
 			{/*usePico()*/}
+
+			<G.Style>{styleText}</G.Style>
 		</G.Head>
 		<G.Body>
-			<Header />
+			EdTech is watching...
 
-			{generateNavigation([
-				{ name: 'Home', path: '/' },
-			], 'Home')}
+			<Card>
+				0% of lockdown browsers are secure.
+			</Card>
 		</G.Body>
 	</>
 );

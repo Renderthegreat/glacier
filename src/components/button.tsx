@@ -1,8 +1,8 @@
 import { Component, } from 'rynth';
 
-import { CommonAttributes, } from '#~/common';
-import { On, } from '#~/APIs/trigger';
-import { primitive, } from '#~/index';
+import { CommonAttributes, } from '#~/common.tsx';
+import { On, } from '#~/APIs/trigger.ts';
+import { primitive, } from '#~/index.ts';
 
 export type ButtonAttributes = { } & CommonAttributes;
 /**

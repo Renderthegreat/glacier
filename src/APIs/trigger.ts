@@ -1,6 +1,6 @@
 import * as Rynth from 'rynth';
 
-import { Cursor, } from '#~/APIs/cursor';
+import { Cursor, } from '#~/APIs/cursor.ts';
 
 // TODO: Use `Trigger` types.
 type OnKeys = {

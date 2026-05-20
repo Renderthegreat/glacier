@@ -1,7 +1,7 @@
-import { Component, ComponentConfig, hook, } from 'rynth';
+import { Component, type ComponentConfig, hook, } from 'rynth';
 
-import { BodyAttributes, HeadAttributes, Head, Body, } from '#~/components';
-import { Registry, render, } from '#~/render';
+import type { BodyAttributes, HeadAttributes, } from '#~/components.tsx';
+import { type Registry, render, } from '#~/render.tsx';
 
 export type AppContainerConfig = ComponentConfig<{}>;
 export type AppConfig = ComponentConfig<{
@@ -62,8 +62,8 @@ export class App extends Component<AppConfig> {
 			hook(app, (component: Component) => {
 				// console.log(`Re-rendering... ${component.config}`);
 
-				let oldNode: Node = registry.get(component.key)!;
-				let newNode: Node = render({ root: component, registry: registry, });
+				const oldNode: Node = registry.get(component.key)!;
+				const newNode: Node = render({ root: component, registry: registry, });
 
 				// TODO: Ensure every `oldNode` is a `ChildNode`.
 				(oldNode as ChildNode).replaceWith(newNode);
@@ -77,9 +77,7 @@ export class App extends Component<AppConfig> {
 
 	protected virtualStylesheet: CSSStyleSheet;
 
-	public constructor(
-		public readonly config: AppConfig,
-	) {
+	public constructor(config: AppConfig) {
 		// TODO: Prevent these errors from propagating.
 
 		if (!(config.children[0] instanceof Component) || !(config.children[1] instanceof Component)) {

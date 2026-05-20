@@ -1,7 +1,7 @@
 import { Component, ComponentConfig, Child, Signal, } from 'rynth';
 
-import { CommonAttributes, } from '#~/common';
-import { componentFunction, } from '#~/index';
+import { CommonAttributes, } from '#~/common.tsx';
+import { componentFunction, } from '#~/index.ts';
 
 export type ShowAttributes = {
 	when: Signal<boolean>;

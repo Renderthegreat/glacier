@@ -1,8 +1,8 @@
 import { Component, } from 'rynth';
 
-import { CommonAttributes, } from '#~/common';
-import { primitive, } from '#~/index';
-import { Shadow, } from '#~/components';
+import { CommonAttributes, } from '#~/common.tsx';
+import { primitive, } from '#~/index.ts';
+import { Shadow, } from '#~/components.tsx';
 
 export type LinkAttributes = {
 	reference: string,
