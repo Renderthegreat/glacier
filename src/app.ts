@@ -1,6 +1,6 @@
 import { Component, type ComponentConfig, hook, } from 'rynth';
 
-import type { BodyAttributes, HeadAttributes, } from '#~/components.tsx';
+import type { Body, BodyConfig, } from '#~/components.tsx';
 import { type Registry, render, } from '#~/render.tsx';
 
 export type AppContainerConfig = ComponentConfig<{}>;
@@ -93,7 +93,7 @@ export class App extends Component<AppConfig> {
 
 		super(
 			config,
-			Symbol(''), // ? Should I add a custom HTML element for this?
+			Symbol(''), // TODO: Should I add a custom HTML element for this?
 		);
 
 		// Generate `.js` import map.
@@ -104,12 +104,12 @@ export class App extends Component<AppConfig> {
 		this.virtualStylesheet = new CSSStyleSheet();
 	};
 
-	public get head(): Component<HeadAttributes> {
-		return this.config.children[0] as Component<HeadAttributes>;
+	public get head(): Component<BodyConfig> {
+		return this.config.children[0] as Component<BodyConfig>;
 	};
 
-	public get body(): Component<BodyAttributes> {
-		return this.config.children[1] as Component<BodyAttributes>	;
+	public get body(): Component<BodyConfig> {
+		return this.config.children[1] as Component<BodyConfig>;
 	};
 
 	/**

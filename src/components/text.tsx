@@ -1,12 +1,11 @@
 import { Component, } from 'rynth';
 
-import { CommonAttributes, } from '#~/common.tsx';
-import { Binding, } from '#~/binding.ts';
+import type { CommonConfig, } from '#~/common.tsx';
 import { componentFunction, } from '#~/index.ts';
 
-export type TextAttributes = {} & CommonAttributes & Binding<string>;
-export const Text = componentFunction<TextAttributes>((config) => {
-	const signal = config['bind:value'] || config.children.join();
+export type TextConfig = {} & CommonConfig /*& Binding<string>*/;
+export const Text = componentFunction<TextConfig>((config) => {
+	const signal =  config.children.join();
 
 	const component = new Component({
 		...config,

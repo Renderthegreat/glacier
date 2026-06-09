@@ -1,15 +1,15 @@
 import { Component, } from 'rynth';
 
-import { CommonAttributes, } from '#~/common.tsx';
+import { CommonConfig, } from '#~/common.tsx';
 import { primitive, } from '#~/index.ts';
 import { Shadow, } from '#~/components.tsx';
 
-export type LinkAttributes = {
+export type LinkConfig = {
 	reference: string,
-} & CommonAttributes;
+} & CommonConfig;
 /**
  * TODO: Documentation.
  */
-export const Link = primitive<LinkAttributes>((component) => {
+export const Link = primitive<LinkConfig>((component) => {
 	return component;
 }, Symbol('glacier-anchor'));

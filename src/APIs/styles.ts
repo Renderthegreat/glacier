@@ -81,8 +81,6 @@ export namespace Style {
 			const slot = globalThis.document.createElement('slot');
 			shadow.appendChild(slot);
 		};
-
-		console.log(element.querySelectorAll('.crumb').entries().toArray().map((node) => node[1].tagName));
 		
 		// But nothing here.
 		// console.log(element.computedStyleMap().entries().toArray(), element.tagName);

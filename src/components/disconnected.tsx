@@ -2,12 +2,12 @@ import * as Rynth from 'rynth';
 
 import { componentFunction, } from '#~/index.ts';
 
-import { CommonAttributes, } from '#~/common.tsx';
+import { CommonConfig, } from '#~/common.tsx';
 
-export type DisconnectedAttributes = {
+export type DisconnectedConfig = {
 	readonly key: unique symbol;
-} & CommonAttributes;
+} & CommonConfig;
 
-export const Disconnected = componentFunction<DisconnectedAttributes>((config) => {
-	return new Rynth.Component<DisconnectedAttributes>(config);
+export const Disconnected = componentFunction<DisconnectedConfig>((config) => {
+	return new Rynth.Component<DisconnectedConfig>(config);
 });

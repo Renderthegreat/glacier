@@ -1,12 +1,12 @@
 import { Component, } from 'rynth';
 
-import { CommonAttributes, } from '#~/common.tsx';
+import { CommonConfig, } from '#~/common.tsx';
 import { primitive, } from '#~/index.ts';
 
-export type DivAttributes = {} & CommonAttributes;
+export type DivConfig = {} & CommonConfig;
 /**
  * {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/div HTMLDivElement}.
  */
-export const Div = primitive<DivAttributes>((component) => {
+export const Div = primitive<DivConfig>((component) => {
 	return component;
 }, Symbol('div'));

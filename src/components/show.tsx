@@ -1,12 +1,12 @@
 import { Component, ComponentConfig, Child, Signal, } from 'rynth';
 
-import { CommonAttributes, } from '#~/common.tsx';
+import { CommonConfig, } from '#~/common.tsx';
 import { componentFunction, } from '#~/index.ts';
 
-export type ShowAttributes = {
+export type ShowConfig = {
 	when: Signal<boolean>;
-} & CommonAttributes;
-export const Show = componentFunction<ShowAttributes>((config) => {
+} & CommonConfig;
+export const Show = componentFunction<ShowConfig>((config) => {
 	const { when, } = config;
 
 	const child = <></>;
@@ -38,11 +38,11 @@ export const Show = componentFunction<ShowAttributes>((config) => {
 
 	return wrapper;
 });
-/*export class Show implements ComponentFactory<ShowAttributes> {
+/*export class Show implements ComponentFactory<ShowConfig> {
 	public readonly symbol: symbol = Symbol('slot');
 
 	// TODO: To clone or not to clone, that is the question.
-	public of(config: ComponentConfig<ShowAttributes>): Component<ShowAttributes> {
+	public of(config: ComponentConfig<ShowConfig>): Component<ShowConfig> {
 		const { when, } = config;
 
 		const child = <></>;

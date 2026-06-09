@@ -1,6 +1,6 @@
 import * as Rynth from 'rynth';
 
-import { CommonAttributes, } from '#~/common.tsx';
+import { CommonConfig, } from '#~/common.tsx';
 import { Binding, } from '#~/binding.ts';
 import { componentFunction, } from '#~/index.ts';
 
@@ -9,8 +9,8 @@ import { Disconnected, } from '#~/components/disconnected.tsx';
 /**
  * Items bound must strictly be {@link Disconnected}.
  */
-export type CollectionAttributes =
-	CommonAttributes & 
+export type CollectionConfig =
+	CommonConfig & 
 	Required<Binding<readonly (Rynth.Component)[]>> &
 	{}
 ;
@@ -24,7 +24,7 @@ export type CollectionAttributes =
 };*/
 
 /*export const Collection = 
-	componentFunction<CollectionAttributes>((config) => {
+	componentFunction<CollectionConfig>((config) => {
 		const { 'bind:value': signal, } = config;
 
 		const keyMap: Map<number, symbol> = new Map();

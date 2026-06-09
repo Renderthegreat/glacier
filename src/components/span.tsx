@@ -1,12 +1,11 @@
-import { Component, } from 'rynth';
-
-import { CommonAttributes, } from '#~/common.tsx';
 import { primitive, } from '#~/index.ts';
 
-export type SpanAttributes = {} & CommonAttributes;
+import type { CommonConfig, } from '#~/common.tsx';
+
+export type SpanConfig = {} & CommonConfig;
 /**
  * {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/span HTMLSpanElement}.
  */
-export const Span = primitive<SpanAttributes>((component) => {
+export const Span = primitive<SpanConfig>((component) => {
 	return component;
 }, Symbol('span'));

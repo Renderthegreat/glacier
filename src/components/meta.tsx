@@ -1,17 +1,17 @@
 import { Component, ComponentFactory, ComponentConfig, } from 'rynth';
 
-import { CommonAttributes, } from '#~/common.tsx';
+import { CommonConfig, } from '#~/common.tsx';
 
-export type MetaAttributes = {
+export type MetaConfig = {
 	name: string,
 };
 /**
  * Meta data for the page.
  */
-export class Meta implements ComponentFactory<MetaAttributes> {
+export class Meta implements ComponentFactory<MetaConfig> {
 	public readonly symbol: symbol = Symbol('meta');
 
-	public of(config: ComponentConfig<MetaAttributes>): Component<any> {
+	public of(config: ComponentConfig<MetaConfig>): Component<any> {
 		if (config.name == 'title') {
 			// I hate how this works.
 			return new Component({
@@ -19,7 +19,7 @@ export class Meta implements ComponentFactory<MetaAttributes> {
 			}, Symbol('title'));
 		};
 
-		const newConfig: ComponentConfig<MetaAttributes & {
+		const newConfig: ComponentConfig<MetaConfig & {
 			value: string,
 		}> = {
 			name: config.name,

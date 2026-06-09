@@ -2,7 +2,7 @@ import { Component, ComponentFactory, ComponentConfig, } from 'rynth';
 
 import { IronEnum, } from 'iron-enum';
 
-import { CommonAttributes, } from '#~/common.tsx';
+import { CommonConfig, } from '#~/common.tsx';
 
 import { Time, } from '#~/APIs/time.ts';
 
@@ -28,26 +28,26 @@ export const InputType = IronEnum<{
 	[Key in (typeof InputData._.typeTags)]: undefined;
 }>();
 
-export type InternalInputAttributes = {
+export type InternalInputConfig = {
 	type: typeof InputType._.typeOf,
 	value: typeof InputData._.typeOf,
 	children: string[],
 };
 
-export type InputAttributes = {
+export type InputConfig = {
 	type: typeof InputType._.typeOf,
-} & CommonAttributes;
+} & CommonConfig;
 /**
  * {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input HTMLInputElement}.
  * TODO: Add all input types. Also, make it possible to add new input types!
  */
-export class Input implements ComponentFactory<InputAttributes> {
+export class Input implements ComponentFactory<InputConfig> {
 	public symbol: symbol = Symbol('input');
 
-	public of(config: ComponentConfig<InputAttributes>): Component<InternalInputAttributes> {
-		let newConfig: InternalInputAttributes = {
+	public of(config: ComponentConfig<InputConfig>): Component<InternalInputConfig> {
+		let newConfig: InternalInputConfig = {
 			children: config.children,
-		} as InternalInputAttributes;
+		} as InternalInputConfig;
 
 		config.type.match({
 			Text: () => {

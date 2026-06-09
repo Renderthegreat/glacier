@@ -12,6 +12,7 @@
 		"rules": {
 			"exclude": [
 				"jsx-key",
+				"verbatim-module-syntax"
 			],
 		},
 	},
@@ -25,9 +26,9 @@
 		"rynth": "../rynth/src/index.ts",
 		"rynth/jsx-runtime": "../rynth/src/jsx-runtime.ts",
 
-
 		// Dependencies.
 		// "colorjs.io": "npm:colorjs.io@latest",
+		"libmd": "jsr:@lambdaurora/libmd",
 		"iron-enum": "npm:iron-enum@latest",
 		"type-fest": "npm:type-fest@latest",
 		
@@ -40,7 +41,9 @@
 	"exports": {
 		".": "./src/index.ts",
 
-		"./jsx-runtime": "./src/jsx-runtime.ts"
+		"./components": "./src/components.tsx",
+
+		"./app": "./src/app.ts",
 	},
 
 	"tasks": {

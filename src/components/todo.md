@@ -1,0 +1,1 @@
+ - Update all components to use `primitive`, or `componentFunction`.

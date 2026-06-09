@@ -1,0 +1,2 @@
+ - Add automatic GDPR policy enforcers to protect users, while giving them freedom to turn it off?
+ - Add `Mint` to *Glacier*.

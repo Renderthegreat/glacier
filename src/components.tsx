@@ -28,12 +28,17 @@ export * from '#~/components/style.tsx';
 // # ...
 export * from '#~/components/button.tsx';
 export * from '#~/components/input.tsx';
+export * from '#~/components/image.tsx';
 
 // # State based.
 export * from '#~/components/show.tsx';
 export * from '#~/components/collection.tsx';
 
-// # Custom components
+// # *Markdown*.
+export * from '#~/ui/mint.tsx';
+
+// # Custom components.
+
 
 // Check to ensure we are running in the browser.
 if (globalThis['window'] !== undefined) {

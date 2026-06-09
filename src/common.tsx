@@ -1,8 +1,8 @@
 import * as Rynth from 'rynth';
 
-import { ApplyOn, } from '#~/APIs/trigger';
+import { ApplyOn, } from '#~/APIs/trigger.ts';
 
-export type CommonAttributes = {
+export type CommonConfig = {
 	// TODO: Move these 2.
 	id?: string,
 	class?: string,

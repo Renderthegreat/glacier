@@ -1,8 +1,26 @@
 /*
+ * Fonts.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+	font-family: 'Newsreader', 'serif';
+}
+
+/*
  * Global layer.
  */
 @layer base {
-	@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+	/*
+	* Variable declarations.
+	*/
+	:root {
+		--primary-color: #E83256;
+
+		--unified-color: #888888;
+	}
 
 	/*
 	 * Light / Dark mode.
@@ -24,17 +42,97 @@
 		}
 	}
 
-	
+	* {
+		margin: 0px;
+		padding: 0px;
+	}
 
-	/*
-	 * Variable declarations.
-	 */
-	:root {
-		--primary-color: #E83256;
+	body {
+		background: var(--background-color);
+		color: var(--foreground-color);
+	}
+
+	button {
+		background: var(--foreground-color);
+		color: var(--background-color);
+	
+		padding: 20px;
+	
+		margin: 10px;
+	
+		border-radius: 0%;
+		border: none;
+	
+		outline: 2px solid var(--unified-color);
+		outline-offset: 0px;
+	
+		transition: all ease 0.1s;
+	
+		&:hover {
+			background: var(--primary-color);
+			color: whitesmoke;
+	
+			outline: 2px solid var(--primary-color);
+			outline-offset: 2px;
+		}
 	}
 
 	::selection {
-		background: var(--primary)
+		background: var(--primary-color);
+		color: whitesmoke;
+	}
+}
+
+/*
+ * Lander.
+ */
+.lander {
+	height: 100dvh;
+	width: 100dvw;
+
+	display: grid;
+
+	place-items: center;
+}
+
+.start-button {
+	width: fit-content;
+}
+
+/*
+ * Epic Text.
+ */
+.epic-text {
+	display: inline-block;
+
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.epic-text > * {
+	display: inline-block; /* So the text can move off the screen. */
+
+	margin-inline: 2px; /* For the spaces. */
+
+	color: var(--color);
+
+	font-size: 2em;
+	font-weight: bold;
+
+	font-family: 'Geist Mono', 'Courier New', 'Courier', 'monospace';
+
+	transform: translate(0, 100%);
+	
+	animation: 0.2s epic-text-slide ease-out both;
+	animation-delay: calc(var(--index) * 0.2s);
+}
+
+@keyframes epic-text-slide {
+	0% {
+		transform: translate(0%, 100%);
+	}
+	100% {
+		transform: translate(0%, 0%);
 	}
 }
 
@@ -42,9 +140,29 @@
  * Cards.
  */
 .card-container {
-	background: var(--);
+	background: var(--foreground-color);
+
+	margin: 20px; /* Ensure there is enough area for the hover effect. */
 
 	& > .card {
-		background: var(--primary-compliment);
+		background: var(--background-color);
+
+		color: var(--foreground-color);
+		
+		border: solid grey 1px;
+
+		align-content: center;
+
+		padding: 15px;
+
+		transform: translate(-5px, -5px);
+
+		transition: 
+			transform 0.15s ease
+		;
+
+		&:hover {
+			transform: translate(-10px, -10px);
+		}
 	}
 }
