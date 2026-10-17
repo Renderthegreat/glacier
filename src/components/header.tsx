@@ -1,7 +1,5 @@
-import { Component, } from 'rynth';
-
-import { CommonConfig, } from '#~/common.tsx';
 import { primitive, } from '#~/index.ts';
+import { CommonConfig, } from '#~/common.tsx';
 
 export type HeaderConfig = {} & CommonConfig;
 /**

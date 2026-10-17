@@ -1,6 +1,11 @@
 import * as Rynth from 'rynth';
 
-import type { CommonConfig, } from '#~/common.tsx';
+import type { CommonConfig, } from "#~/common.tsx";
+
+export type { CommonConfig, } from '#~/common.tsx';
+
+export type { Binding, } from '#~/binding.ts';
+
 
 import { On, } from '#~/APIs/trigger.ts';
 import { Style, } from '#~/APIs/styles.ts';
@@ -43,7 +48,25 @@ export function componentFunction<C extends CommonConfig, T = object>(
 	return factory as any;
 };
 
-export function primitive<C extends CommonConfig>(func: (config: Rynth.Component<C>) => Rynth.Component, key: symbol): Class<Rynth.ComponentFactory<C>> {
+export function componentDynamicFunction<C, T = object>(
+	func: (config: Rynth.ComponentConfig<C>) => Rynth.Component,
+	base: Class<T> = class {} as Class<T>,
+): Class<(Rynth.ComponentFactory<C>) & Class<T>> {
+
+	const factory = class extends (base as any) implements Rynth.ComponentFactory<C> {
+		public of(config: Rynth.ComponentConfig<C>): Rynth.Component<any> {
+			const component = func(config);
+
+			setupComponent(component);
+
+			return component;
+		};
+	};
+
+	return factory as any;
+};
+
+export function primitive<C extends CommonConfig>(func: (component: Rynth.Component<C>) => Rynth.Component, key: symbol): Class<Rynth.ComponentFactory<C>> {
 	return class implements Rynth.ComponentFactory<C> {
 		public readonly symbol: symbol = key;
 

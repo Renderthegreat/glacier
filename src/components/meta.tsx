@@ -1,33 +1,19 @@
-import { Component, ComponentFactory, ComponentConfig, } from 'rynth';
+import { Component, } from 'rynth';
 
-import { CommonConfig, } from '#~/common.tsx';
+import { componentDynamicFunction, } from '#~/index.ts';
 
 export type MetaConfig = {
-	name: string,
-};
+	readonly name: string,
+} /* TODO: Remove? */;
 /**
- * Meta data for the page.
+ * Meta-data for the page.
  */
-export class Meta implements ComponentFactory<MetaConfig> {
-	public readonly symbol: symbol = Symbol('meta');
-
-	public of(config: ComponentConfig<MetaConfig>): Component<any> {
-		if (config.name == 'title') {
-			// I hate how this works.
-			return new Component({
-				children: config.children,
-			}, Symbol('title'));
-		};
-
-		const newConfig: ComponentConfig<MetaConfig & {
-			value: string,
-		}> = {
-			name: config.name,
-			value: String(config.children[0]),
-
-			children: [],
-		};
-
-		return new Component(newConfig, this.symbol);
+export const Meta = componentDynamicFunction<MetaConfig>((config) => {
+	// This sucks, but this isn't my decision.
+	// TODO: When this is fix-able, fix it.
+	if (config.name === 'title') {
+		return new Component(config, Symbol('title'));
 	};
-};
+
+	return new Component(config, Symbol('meta'));
+});

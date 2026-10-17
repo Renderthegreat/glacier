@@ -10,7 +10,8 @@ export const Show = componentFunction<ShowConfig>((config) => {
 	const { when, } = config;
 
 	const child = <></>;
-	child.config.children = config.children;
+	// TODO: Rebuild this.
+	// child.config.children = config.children;
 
 	const childSignal = new Signal<Child>(null);
 

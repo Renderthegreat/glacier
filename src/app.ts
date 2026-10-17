@@ -1,7 +1,7 @@
 import { Component, type ComponentConfig, hook, } from 'rynth';
 
 import type { Body, BodyConfig, } from '#~/components.tsx';
-import { type Registry, render, } from '#~/render.tsx';
+import { Registry, render, } from '#~/render.tsx';
 
 export type AppContainerConfig = ComponentConfig<{}>;
 export type AppConfig = ComponentConfig<{
@@ -49,15 +49,16 @@ export class App extends Component<AppConfig> {
 	 * 
 	 * @param root - Expects a fragment of [{@link Head}, {@link Body}].
 	 * @param config - An optional configuration object.
+	 * 
 	 * @returns {App}.
 	 */
 	public static create(root: Component, config: AppCreationConfig = {}): App {
-		const registry: Registry = new WeakMap();
+		const registry: Registry = new Registry();
 
 		const app = new App({ children: root.config.children, registry: registry, });
 
 		if (config.setup) {
-			config.setup(app, new WeakMap());
+			config.setup(app, new Registry());
 		} else {
 			hook(app, (component: Component) => {
 				// console.log(`Re-rendering... ${component.config}`);
@@ -81,14 +82,14 @@ export class App extends Component<AppConfig> {
 		// TODO: Prevent these errors from propagating.
 
 		if (!(config.children[0] instanceof Component) || !(config.children[1] instanceof Component)) {
-			throw new AppError({ message: 'App must have a <head> and <body> element.', fatal: true, });
+			throw new AppError({ message: 'App must have a head and body element.', fatal: true, });
 		};
 
 		if (config.children[0].key.description !== 'head') {
-			throw new AppError({ message: 'App must have a <head> element (first child).', fatal: true, });
+			throw new AppError({ message: 'App must have a head element (item #1).', fatal: true, });
 		};
 		if (config.children[1].key.description !== 'body') {
-			throw new AppError({ message: 'App must have a <body> element (second child).', fatal: true, });
+			throw new AppError({ message: 'App must have a body element (item #2).', fatal: true, });
 		};
 
 		super(

@@ -28,20 +28,23 @@
 
 		// Dependencies.
 		// "colorjs.io": "npm:colorjs.io@latest",
-		"libmd": "jsr:@lambdaurora/libmd",
 		"iron-enum": "npm:iron-enum@latest",
 		"type-fest": "npm:type-fest@latest",
+		"marked": "npm:marked@latest",
 		
 		// Dev Dependencies.
 		"html-inline-script-webpack-plugin": "npm:html-inline-script-webpack-plugin@latest",
 		"html-webpack-plugin": "npm:html-webpack-plugin@latest",
-		"webpack-cli": "npm:webpack-cli@latest"
+		"webpack-cli": "npm:webpack-cli@latest",
 		
 	},
 	"exports": {
 		".": "./src/index.ts",
 
 		"./components": "./src/components.tsx",
+		
+		"./ui": "./src/ui.tsx",
+
 
 		"./app": "./src/app.ts",
 	},

@@ -5,7 +5,7 @@ import { primitive, } from '#~/index.ts';
 import { Shadow, } from '#~/components.tsx';
 
 export type LinkConfig = {
-	reference: string,
+	reference: URL,
 } & CommonConfig;
 /**
  * TODO: Documentation.

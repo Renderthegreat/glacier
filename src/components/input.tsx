@@ -1,96 +1,121 @@
-import { Component, ComponentFactory, ComponentConfig, } from 'rynth';
+import * as Rynth from 'rynth';
 
 import { IronEnum, } from 'iron-enum';
 
 import { CommonConfig, } from '#~/common.tsx';
 
+import { Binding, } from '#~/binding.ts';
+
 import { Time, } from '#~/APIs/time.ts';
 
-export const InputData = IronEnum<{
-	Text: string,
-	Password: string,
-	Email: string,
-	Number: number,
-	CheckBox: boolean,
-	Radio: boolean,
-	// TODO: Add file type.
-	File: any,
-	Hidden: string,
-	Search: string,
-	Telephone: `${number}+${number}-${number}-${number}`,
-	// TODO: Add URL type.
-	URL: string,
-	Time: Time,
-	// Color: Color,
-}>();
+export enum InputType {
+	Text = 'text',
+	Password = 'password',
+	Email = 'email',
+	Number = 'number',
 
-export const InputType = IronEnum<{
-	[Key in (typeof InputData._.typeTags)]: undefined;
-}>();
-
-export type InternalInputConfig = {
-	type: typeof InputType._.typeOf,
-	value: typeof InputData._.typeOf,
-	children: string[],
+	Search = 'search',
+	CheckBox = 'checkbox',
+	// Radio: boolean,
+	// // TODO: Add file type.
+	File = 'file',
+	// Hidden: string,
+	// Search: string,
+	// Telephone: `${number}+${number}-${number}-${number}`,
+	// // TODO: Add URL type.
+	// URL: string,
+	// Time: Time,
+	// // Color: Color,
 };
 
+type Writeable<T> = {
+	-readonly [P in keyof T]: T[P];
+};
+
+export type InternalInputConfig = Writeable<InputConfig>;
+
 export type InputConfig = {
-	type: typeof InputType._.typeOf,
-} & CommonConfig;
+	readonly type: InputType,
+
+	readonly placeholder?: Rynth.Value<any>,
+	// TODO: ...
+	// children: string[],
+} & CommonConfig & Binding<any/* TODO: Constrict types. */>;
 /**
  * {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input HTMLInputElement}.
  * TODO: Add all input types. Also, make it possible to add new input types!
  */
-export class Input implements ComponentFactory<InputConfig> {
+export class Input implements Rynth.ComponentFactory<InputConfig> {
 	public symbol: symbol = Symbol('input');
 
-	public of(config: ComponentConfig<InputConfig>): Component<InternalInputConfig> {
-		let newConfig: InternalInputConfig = {
+	public of(config: Rynth.ComponentConfig<InputConfig>): Rynth.Component<InputConfig> {
+		const newConfig: Rynth.ComponentConfig<InternalInputConfig> = {
+			...config,
 			children: config.children,
-		} as InternalInputConfig;
+		};
 
-		config.type.match({
-			Text: () => {
-				newConfig.type = InputType.Text();
-			},
-			Password: () => {
-				newConfig.type = InputType.Password();
-			},
-			Email: () => {
-				newConfig.type = InputType.Email();
-			},
-			Number: () => {
-				newConfig.type = InputType.Number();
-			},
-			CheckBox: () => {
-				newConfig.type = InputType.CheckBox();
-			},
-			Radio: () => {
-				newConfig.type = InputType.Radio();
-			},
-			File: () => {
-				newConfig.type = InputType.File();
-			},
-			Hidden: () => {
-				newConfig.type = InputType.Hidden();
-			},
-			Search: () => {
-				newConfig.type = InputType.Search();
-			},
-			Telephone: () => {
-				newConfig.type = InputType.Telephone();
-			},
-			URL: () => {
-				newConfig.type = InputType.URL();
-			},
-			Time: () => {
-				newConfig.type = InputType.Time();
-			},
-			/*Color: () => {
-				newConfig.type = InputType.Color();
-			},*/
+		const component = new Rynth.Component(newConfig, this.symbol);
+
+		component.lifecycle.on('mount', ({ node: element, }: { node: HTMLInputElement, }) => {
+			// FIX: Triggered twice due to duo mount bug.
+			console.log('Input was mounted!');
+
+			if (component.config['bind:value']) {
+				switch (config.type) {
+					case InputType.CheckBox: {
+						element.checked = component.config['bind:value'].value != '';
+						break;
+					};
+					case InputType.File: {
+						// ? Should we change this?
+						break;
+					};
+					default: {
+						element.value = component.config['bind:value'].value || '';
+						break;
+					};
+				};
+
+				
+			};
+
+			component.config['bind:value'].map((value) => {
+				switch (config.type) {
+					case InputType.CheckBox: {
+						element.checked = component.config['bind:value'].value != '';
+						break;
+					};
+					case InputType.File: {
+						// ? Should we change this?
+						break;
+					};
+					default: {
+						element.value = component.config['bind:value'].value || '';
+						break;
+					};
+				};
+			});
+
+			// TODO: Optimize.
+			element.addEventListener('input', (event) => {
+				switch (config.type) {
+					case InputType.CheckBox: {
+						component.config['bind:value'].value = element.checked;
+						break;
+					};
+					case InputType.File: {
+						component.config['bind:value'].value = element.files;
+						break;
+					};
+					default: {
+						component.config['bind:value'].value = element.value;
+						break;
+					};
+				};
+			});
 		});
+		
 
-		return new Component(newConfig, this.symbol);
+		return component;
 	};
 };

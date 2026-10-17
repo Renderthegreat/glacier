@@ -4,7 +4,9 @@ import { Component, type Child, Signal, } from 'rynth';
  * A very simple registry that maps keys to nodes.
  * It is much smaller than a virtual *DOM*.
  */
-export type Registry = WeakMap<symbol, Node>;
+export class Registry extends /* Weak */Map<symbol, Node> {
+
+};
 
 /**
  * Resolves a single child ({@link Component}, {@link Signal}, or primitive) into a physical DOM Node.
@@ -15,74 +17,79 @@ function resolveChild({ child, registry, root, }: { child: Child, registry: Regi
 	};
 
 	if (child instanceof Signal) {
-		// We always return a stable Node (either the initial rendered node or a placeholder) so that future updates can replace it in-place.
 		const placeholder = globalThis.document.createComment('signal');
+		const container = globalThis.document.createDocumentFragment();
 
-		let currentNode: Node | null = null;
+		let currentNodes: Node[] = [];
 		let lastValue = child.value;
 
-		const mountForValue = (value: any): Node | null => {
+		const mountForValue = (value: any): Node[] => {
+			if (value === null || value === undefined) {
+				return [];
+			};
+
+			let rendered: Node;
 			if (value instanceof Component) {
-				return render({ root: value, registry, });
+				rendered = render({ root: value, registry, });
+			} else {
+				rendered = globalThis.document.createTextNode(String(value));
 			};
 
-			if (value === null) {
-				return null;
+			// Extract nodes before the fragment is appended and emptied by the DOM.
+			if (rendered instanceof DocumentFragment) {
+				return Array.from(rendered.childNodes);
 			};
 
-			if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-				return globalThis.document.createTextNode(String(value));
-			};
-
-			return null;
+			return [rendered];
 		};
 
-		// Initialize current node (or use placeholder if nothing to render yet).
-		currentNode = mountForValue(lastValue);
-		const nodeToReturn = currentNode ?? placeholder;
+		// Initialize current nodes and append them alongside the anchor placeholder.
+		currentNodes = mountForValue(lastValue);
+		for (const node of currentNodes) {
+			container.appendChild(node);
+		};
+		container.appendChild(placeholder);
 
-		// Subscribe to future updates and swap nodes in the DOM as needed.
+		// Subscribe to updates and swap nodes relative to the anchor.
 		const unsubscribe = child.subscribe((value) => {
-			if (value === lastValue) return;
+			if (value === lastValue) {
+				return;
+			};
 
 			const previous = lastValue;
 			lastValue = value;
 
-			// If the previous value was a Component, emit unmount so it can cleanup.
 			if (previous instanceof Component) {
 				previous.lifecycle.emit('unmount');
+				previous.lifecycle.cleanup();
 				registry.delete(previous.key);
 			};
 
-			const newNode = mountForValue(value);
+			const newNodes = mountForValue(value);
 
-			if (newNode) {
-				// Insert or replace in DOM.
-				if (currentNode) {
-					(currentNode as ChildNode).replaceWith(newNode);
-				} else {
-					(placeholder as ChildNode).replaceWith(newNode);
-				};
-				currentNode = newNode;
-			} else {
-				// New value is null — remove current node and restore placeholder.
-				if (currentNode) {
-					(currentNode as ChildNode).replaceWith(placeholder);
-					currentNode = null;
+			// Insert new nodes directly before the anchor placeholder.
+			for (const node of newNodes) {
+				placeholder.before(node);
+			};
+
+			// Clean up previous DOM nodes.
+			for (const node of currentNodes) {
+				if (node.parentNode) {
+					node.parentNode.removeChild(node);
 				};
 			};
+
+			currentNodes = newNodes;
 		});
 
 		root.lifecycle.addCleanupTask(unsubscribe);
 
-		return nodeToReturn;
+		return container;
 	};
 
-	if (typeof child === 'string' || typeof child === 'number' || typeof child === 'boolean') {
-		return globalThis.document.createTextNode(String(child));
-	};
-
-	return null;
+	return globalThis.document.createTextNode(
+		(child === null || child === undefined) ? '' : String(child),
+	);
 };
 
 /**
@@ -100,6 +107,9 @@ export function render({ root, registry, }: { root: Component, registry: Registr
 			const empty = globalThis.document.createTextNode('');
 			registry.set(root.key, empty);
 
+			// # Yes, this is necessary!
+			root.lifecycle.emit('mount', { node: empty, });
+
 			return empty;
 		};
 
@@ -111,7 +121,7 @@ export function render({ root, registry, }: { root: Component, registry: Registr
 			if (childNode) {
 				fragment.appendChild(childNode);
 
-				if (!firstNode) {
+				if (firstNode === null) {
 					firstNode = childNode;
 				}; // Track the first one for the registry.
 			};
@@ -121,32 +131,37 @@ export function render({ root, registry, }: { root: Component, registry: Registr
 			registry.set(root.key, firstNode);
 		};
 
-		// HACK(+): If there's only 1 child, just return it directly to avoid the Fragment wrapper.
-		// TODO: Check if this causes any issues.
-		return root.config.children.length === 1 && firstNode ? firstNode : fragment;
+		const node = /*root.config.children.length === 1 && firstNode ? firstNode : fragment*/ fragment;
+
+		// Fire lifecycle hook.
+		// FIX: Duo mount bug.
+		root.lifecycle.emit('mount', { node, });
+
+		return node;
 	};
 
 	// Handle Standard Elements.
-	const node: Element = window.document.createElement((root.key.description) as keyof HTMLElementTagNameMap);
+	const node: Element = globalThis.document.createElement((root.key.description) as keyof HTMLElementTagNameMap);
 	registry.set(root.key, node);
 
 	// Apply attributes gracefully.
 	for (const [key, value] of Object.entries(root.config)) {
-		if (key === 'children') {
+		if (key === 'children' || key.startsWith('bind:')) {
 			continue;
 		};
 
 		// Support reactive attribute values via `Signal`.
 		if (value instanceof Signal) {
 			const v = value.value;
-			if (v == null) {
+
+			if (v == null || v === false) {
 				node.removeAttribute(key);
 			} else {
 				node.setAttribute(key, String(v));
 			};
 
 			const unsubscribeAttribute = value.subscribe((value) => {
-				if (value == null) {
+				if (value == null || v === false) {
 					node.removeAttribute(key);
 				} else {
 					node.setAttribute(key, String(value));
@@ -158,7 +173,8 @@ export function render({ root, registry, }: { root: Component, registry: Registr
 			continue;
 		};
 
-		if (value == null) {
+		// TODO: Check if I need to account for `false`.
+		if (value === null) {
 			node.removeAttribute(key);
 		} else {
 			node.setAttribute(key, String(value));

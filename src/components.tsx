@@ -6,11 +6,17 @@ export * from '#~/components/head.tsx';
 export * from '#~/components/body.tsx';
 
 export * from '#~/components/header.tsx';
+export * from '#~/components/main.tsx';
+export * from '#~/components/footer.tsx';
+
 
 export * from '#~/components/navigation.tsx';
 
 export * from '#~/components/div.tsx';
 export * from '#~/components/span.tsx';
+
+export * from '#~/components/block-quote.tsx';
+export * from '#~/components/quote.tsx';
 
 export * from '#~/components/text.tsx';
 
@@ -30,12 +36,7 @@ export * from '#~/components/button.tsx';
 export * from '#~/components/input.tsx';
 export * from '#~/components/image.tsx';
 
-// # State based.
-export * from '#~/components/show.tsx';
-export * from '#~/components/collection.tsx';
-
-// # *Markdown*.
-export * from '#~/ui/mint.tsx';
+export * from '#~/components/form.tsx';
 
 // # Custom components.
 
@@ -43,8 +44,64 @@ export * from '#~/ui/mint.tsx';
 // Check to ensure we are running in the browser.
 if (globalThis['window'] !== undefined) {
 	globalThis.customElements.define('glacier-text', class extends HTMLElement {
+		public static get observedAttributes() {
+			return [
+				'bold',
+				'italic',
+				// TODO: ...
+				'level',
+			];
+		};
+
+		private wrapper: HTMLSpanElement;
+
 		public constructor() {
 			super();
+
+			const shadow = this.attachShadow({ mode: 'open', delegatesFocus: true, });
+
+			this.wrapper = globalThis.document.createElement('span');
+
+			const style = globalThis.document.createElement('style');
+			style.textContent = `:host { display: inline; }`;
+
+			shadow.appendChild(style);
+			shadow.appendChild(this.wrapper);
+			// ...
+		};
+
+		private attributeChangedCallback(_name: string, oldValue: string, newValue: string): void {
+			if (oldValue !== newValue) {
+				this.updateAccessibilityTree();
+			};
+		};
+
+		private updateAccessibilityTree(): void {
+			this.wrapper.innerHTML = '';
+
+			let currentElement: HTMLElement = globalThis.document.createElement('slot');
+
+			if (this.getAttribute('bold') === 'true') {
+				const strong = globalThis.document.createElement('strong');
+				strong.appendChild(currentElement);
+				currentElement = strong;
+			};
+			
+			if (this.getAttribute('italic') === 'true') {
+				const italic = globalThis.document.createElement('em');
+				italic.appendChild(currentElement);
+				currentElement = italic;
+			};
+
+			if (this.getAttribute('level')) {
+				const header = globalThis.document.createElement(`h${this.getAttribute('level')}`);
+				header.appendChild(currentElement);
+				currentElement = header;
+
+				console.log(this.getAttribute('level'));
+			};
+
+			this.wrapper.appendChild(currentElement);
 		};
 	});
 
@@ -56,10 +113,10 @@ if (globalThis['window'] !== undefined) {
 		public constructor() {
 			super();
 
-			const shadow = this.attachShadow({ mode: 'open', });
+			const shadow = this.attachShadow({ mode: 'open', delegatesFocus: true, });
 
 			const anchor = globalThis.document.createElement('a');
-			anchor.href = this.getAttribute('reference') || '#.tsx';
+			anchor.href = this.getAttribute('reference') || '#';
 
 			const slot = globalThis.document.createElement('slot');
 			anchor.appendChild(slot);
@@ -69,13 +126,13 @@ if (globalThis['window'] !== undefined) {
 			shadow.appendChild(anchor);
 		};
 
-		public attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
+		public attributeChangedCallback(name: string, _oldValue: string, newValue: string): void {
 			if (name === 'reference') {
 				const anchor = this.shadowRoot?.firstChild as HTMLAnchorElement;
 				anchor.href = newValue;
-			};
 
-			console.log(name);
+				return;
+			};
 		};
 	});
 
@@ -83,7 +140,7 @@ if (globalThis['window'] !== undefined) {
 		public constructor() {
 			super();
 
-			const shadow = this.attachShadow({ mode: 'open', });
+			const shadow = this.attachShadow({ mode: 'open', delegatesFocus: true, });
 
 			const slot = globalThis.document.createElement('slot');
 
@@ -104,6 +161,7 @@ export const Shadow = primitive<Record<PropertyKey, never>>((component) => {
 }, Symbol('glacier-shadow'));
 
 // ? Should `any` be used here?
+// TODO: ...
 export const Missing = primitive<any>((component) => {
 	return component;
 }, Symbol('glacier-missing'));
